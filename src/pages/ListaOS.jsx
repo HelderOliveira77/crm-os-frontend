@@ -8,9 +8,14 @@ import { useNavigate } from 'react-router-dom';
 const API_URL = 'http://localhost:3000/api/os'; 
 
 function ListaOS() {
-    const { token } = useAuth();
+    const { token, user } = useAuth();
     const navigate = useNavigate();
     
+    // Determina o nome a mostrar
+    // Se o 'user' for um objeto, pode ser 'user.username' ou 'user.name'. Ajuste conforme o seu contexto!
+    const userName = user?.username || user?.name || 'Utilizador';   
+
+
     // ESTADOS:
     const [orders, setOrders] = useState([]); // Array para guardar as OS
     const [loading, setLoading] = useState(true);
@@ -82,14 +87,35 @@ function ListaOS() {
                 <button onClick={() => navigate('/os/nova')}>Criar Nova OS</button>
             </div>
         );
+ 
     }
 
     // ------------------------------------------------------------------
     // RENDERIZAÇÃO DA TABELA
     // ------------------------------------------------------------------
 
+
+
+
+
+
     return (
         <div style={{ padding: '20px' }}>
+
+
+            {/* NOVO: Identificação do Utilizador */}
+            <div style={{ 
+                marginBottom: '20px', 
+                padding: '10px', 
+                backgroundColor: '#ecf0f1', 
+                borderLeft: '4px solid #3498db'
+            }}>
+                <p style={{ margin: 0, fontSize: '1.1em' }}>
+                    Bem-vindo(a), **{userName}**!
+                </p>
+            </div>
+
+            
             <h2>Lista de Ordens de Serviço ({orders.length})</h2>
             <button 
                 onClick={() => navigate('/os/nova')} 

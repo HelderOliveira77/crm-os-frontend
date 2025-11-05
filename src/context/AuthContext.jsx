@@ -1,27 +1,36 @@
 // src/context/AuthContext.jsx
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 // 1. Criar o Contexto
 const AuthContext = createContext(null);
 
-// URL base da sua API
-const API_URL = 'http://localhost:3000/auth';
+// URL base da sua API (Sem o /auth no final, para ser a base)
+const API_URL = 'http://localhost:3000';
 
 // 2. Criar o Provedor do Contexto
 const AuthProvider = ({ children }) => {
-  // Estado para guardar o Token e o Utilizador (opcional)
+  // Estado para guardar o Token e o Utilizador
   const [token, setToken] = useState(localStorage.getItem('authToken'));
   const [isAuthenticated, setIsAuthenticated] = useState(!!token);
-  const [user, setUser] = useState(null); // Para guardar dados do user (role, username, etc.)
+  const [user, setUser] = useState(null); // Guardará { username: '...' }
   const [loading, setLoading] = useState(true);
 
+  // Função de LOGOUT (Definida no topo)
+  const logout = () => {
+    localStorage.removeItem('authToken');
+    setToken(null);
+    setIsAuthenticated(false);
+    setUser(null);
+  };
+
+  // Efeito: Sincroniza o estado de autenticação e define loading
   useEffect(() => {
-    // Manter o estado de autenticação sincronizado com o localStorage
     if (token) {
       setIsAuthenticated(true);
-      // Opcional: Aqui pode adicionar uma função para decodificar o token JWT 
-      // e extrair o username/role, ou fazer um pedido GET /auth/me
+      // ATENÇÃO: Se o utilizador recarregar a página, o 'user' continuará a ser 'null'
+      // O ideal seria descodificar o token aqui ou ter o nome no localStorage.
+      // Por enquanto, confiamos apenas no 'user' definido no LOGIN.
     } else {
       setIsAuthenticated(false);
       setUser(null);
@@ -29,10 +38,11 @@ const AuthProvider = ({ children }) => {
     setLoading(false);
   }, [token]);
 
-  // Função de LOGIN
+
+  // Função de LOGIN (CORRIGIDA: Define o user e usa o endpoint correto)
   const login = async (username, password) => {
     try {
-      const response = await fetch(`${API_URL}/login`, {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,8 +56,12 @@ const AuthProvider = ({ children }) => {
         // Guardar o token e atualizar o estado
         localStorage.setItem('authToken', data.token);
         setToken(data.token);
-        // Opcional: Definir dados do user se o backend devolver mais dados
-        // setUser({ username, role: data.role }); 
+
+        // CORREÇÃO CRÍTICA: DEFINIR O USER AQUI!
+        // Assumimos que o Backend Node.js devolve { token: "...", username: "..." }
+        // Se não devolver, use o nome que o utilizador digitou:
+        setUser({ username: data.username || username, role: data.role }); 
+        
         return { success: true };
       } else {
         return { success: false, message: data.message || 'Credenciais inválidas' };
@@ -58,14 +72,6 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // Função de LOGOUT
-  const logout = () => {
-    localStorage.removeItem('authToken');
-    setToken(null);
-    setIsAuthenticated(false);
-    setUser(null);
-  };
-
   // Objeto de valor a ser fornecido
   const value = {
     token,
@@ -73,7 +79,7 @@ const AuthProvider = ({ children }) => {
     user,
     login,
     logout,
-    loading, // [NOVO] Incluir loading
+    loading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
