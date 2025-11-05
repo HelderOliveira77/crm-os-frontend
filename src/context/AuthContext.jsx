@@ -10,36 +10,44 @@ const API_URL = 'http://localhost:3000';
 
 // 2. Criar o Provedor do Contexto
 const AuthProvider = ({ children }) => {
-  // Estado para guardar o Token e o Utilizador
+  // ATENÇÃO: Apenas inicializamos com o token e deixamos o useEffect tratar do resto.
   const [token, setToken] = useState(localStorage.getItem('authToken'));
-  const [isAuthenticated, setIsAuthenticated] = useState(!!token);
-  const [user, setUser] = useState(null); // Guardará { username: '...' }
-  const [loading, setLoading] = useState(true);
+  // user E isAuthenticated começas como null/false. O useEffect é quem manda.
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null); 
+  const [loading, setLoading] = useState(true); // Mantém-se true até o useEffect correr
 
-  // Função de LOGOUT (Definida no topo)
+  // Função de LOGOUT
   const logout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('authUsername'); 
     setToken(null);
     setIsAuthenticated(false);
     setUser(null);
   };
 
-  // Efeito: Sincroniza o estado de autenticação e define loading
+  // Efeito: LIDA COM A PERSISTÊNCIA NA RECARGA (Corre apenas uma vez na montagem)
   useEffect(() => {
-    if (token) {
-      setIsAuthenticated(true);
-      // ATENÇÃO: Se o utilizador recarregar a página, o 'user' continuará a ser 'null'
-      // O ideal seria descodificar o token aqui ou ter o nome no localStorage.
-      // Por enquanto, confiamos apenas no 'user' definido no LOGIN.
+    const storedToken = localStorage.getItem('authToken');
+    const storedUsername = localStorage.getItem('authUsername');
+    
+    if (storedToken) {
+        setIsAuthenticated(true);
+        // O token já está no estado, garantimos que o nome também está.
+        if (storedUsername) {
+            setUser({ username: storedUsername });
+        }
     } else {
-      setIsAuthenticated(false);
-      setUser(null);
+        setIsAuthenticated(false);
+        setUser(null);
     }
-    setLoading(false);
-  }, [token]);
+
+    setLoading(false); // SÓ DESLIGAMOS O LOADING DEPOIS DE TODA A VERIFICAÇÃO.
+
+  }, [token]); // Só re-corre se o token mudar
 
 
-  // Função de LOGIN (CORRIGIDA: Define o user e usa o endpoint correto)
+  // Função de LOGIN (Corrigida e limpa)
   const login = async (username, password) => {
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
@@ -53,15 +61,18 @@ const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (response.ok) {
-        // Guardar o token e atualizar o estado
-        localStorage.setItem('authToken', data.token);
-        setToken(data.token);
-
-        // CORREÇÃO CRÍTICA: DEFINIR O USER AQUI!
-        // Assumimos que o Backend Node.js devolve { token: "...", username: "..." }
-        // Se não devolver, use o nome que o utilizador digitou:
-        setUser({ username: data.username || username, role: data.role }); 
+        const loggedInUsername = data.user ? data.user.username : username;
+        const loggedInRole = data.user ? data.user.role : 'Utilizador';
         
+        // Ações CRÍTICAS: Guardar no localStorage
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('authUsername', loggedInUsername); 
+
+        // Atualizar o estado (isto despoleta o useEffect)
+        setToken(data.token);
+        setUser({ username: loggedInUsername, role: loggedInRole });
+        setIsAuthenticated(true); // Pode ser definido aqui para ser mais rápido
+
         return { success: true };
       } else {
         return { success: false, message: data.message || 'Credenciais inválidas' };
