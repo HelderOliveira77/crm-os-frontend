@@ -10,7 +10,7 @@ import Logo from '../assets/logos multiponto Branco.png'; // <-- AJUSTAR ESTE CA
 // [Estilos básicos para demonstração - manter para visualização]
 const sideBarStyles = {
   width: '250px',
-  height: '100vh',
+  height: 'auto',
   backgroundColor: '#2c3e50', 
   padding: '20px',
   color: 'white',

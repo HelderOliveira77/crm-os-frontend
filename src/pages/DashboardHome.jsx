@@ -61,7 +61,7 @@ function DashboardHome() {
   
   if (ordensServico.length === 0) {
     return (
-        <div>
+        <div style={{ padding: '20px' }}>
             <h2>Ordens de Serviço</h2>
             <p>Não foram encontradas ordens de serviço.</p>
         </div>
@@ -70,7 +70,7 @@ function DashboardHome() {
 
   // --- Renderização da Lista ---
   return (
-    <div>
+    <div style={{ padding: '20px' }}>
       <h2>Ordens de Serviço</h2>
       <p>Total de OS: {ordensServico.length}</p>
       
