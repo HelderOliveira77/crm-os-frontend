@@ -7,27 +7,29 @@ import SideBar from '../components/SideBar'; // A nova SideBar
 const layoutStyles = {
   display: 'flex',
   minHeight: '100vh',
+  width: '100vw',
 };
 
 const contentStyles = {
   flexGrow: 1,
-  padding: '20px',
+  padding: '0',
+};
+
+const outletWrapperStyles = {
+  padding: '0px', // Aplica o espaçamento de 20px em volta do conteúdo
 };
 
 function Dashboard() {
-  // Nota: O logout e navigate foram movidos para a SideBar
-  
   return (
     <div style={layoutStyles}>
       
-      {/* 1. Barra Lateral */}
       <SideBar />
       
-      {/* 2. Conteúdo Principal */}
       <main style={contentStyles}>
-        
-        {/* O Outlet renderiza o componente da sub-rota ativa (ex: Clientes, OS) */}
-        <Outlet /> 
+        {/* ENVOLVA O OUTLET NUM DIV COM ESPAÇAMENTO */}
+        <div style={outletWrapperStyles}>
+             <Outlet /> 
+        </div>
         
       </main>
     </div>

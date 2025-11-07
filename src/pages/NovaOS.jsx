@@ -125,13 +125,13 @@ function NovaOS() {
 
     return (
         <div style={styles.container}>
-            <h2>Nova Ordem de Serviço (Completa)</h2>
+            {/* <h2>Nova Ordem de Serviço</h2> */}
             {message && (<div style={message.type === 'error' ? styles.errorBox : styles.successBox}>{message.text}</div>)}
 
             <form onSubmit={handleSubmit} style={styles.form}>
                 
 {/* 1. INFORMAÇÃO ORDEM DE SERVIÇO */}
-<Section title="INFORMAÇÃO ORDEM DE SERVIÇO">
+<Section title="NOVA ORDEM DE SERVIÇO">
 <FormInput label="Nº Ordem Serviço" name="num_o_s" value={formData.num_o_s} onChange={handleChange} type="number" placeholder="Pode ser gerado automaticamente" required />
 
 <FormInput label="Cliente" name="cliente" value={formData.cliente} onChange={handleChange} required />
@@ -282,7 +282,7 @@ const FormInput = ({ label, name, value, onChange, type = 'text', required = fal
 
 const styles = {
     container: { 
-        padding: '20px', 
+        padding: '0px 100px', 
         width: '100%',     // Ocupa 100% da largura do contentor pai (a área branca)
         maxWidth: '100%',  // Garante que não é limitado por um max-width antigo
         margin: '0 auto',  // Mantém centrado (embora com 100% de largura, não é estritamente necessário)
@@ -293,15 +293,15 @@ const styles = {
     form: { 
         display: 'flex', 
         flexDirection: 'column', 
-        gap: '25px' 
+        gap: '25px' ,
     },
-    section: { 
-        padding: '25px', 
-        border: '1px solid #e0e0e0', 
-        borderRadius: '6px', 
-        backgroundColor: '#fff', 
-        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-    },
+    // section: { 
+    //     padding: '25px', 
+    //     border: '1px solid #e0e0e0', 
+    //     borderRadius: '6px', 
+    //     backgroundColor: '#fff', 
+    //     boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+    // },
     sectionTitle: { 
         borderBottom: '3px solid #3498db', 
         paddingBottom: '10px', 
