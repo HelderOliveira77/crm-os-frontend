@@ -1,7 +1,8 @@
 // src/pages/Dashboard.jsx (AGORA É UM LAYOUT)
 
 import React from 'react';
-import { Outlet } from 'react-router-dom'; // Para renderizar as sub-rotas
+// import { Outlet } from 'react-router-dom'; // Para renderizar as sub-rotas
+import { Outlet, Link } from 'react-router-dom'; // IMPORTAR OUTLET
 import SideBar from '../components/SideBar'; // A nova SideBar
 
 const layoutStyles = {
