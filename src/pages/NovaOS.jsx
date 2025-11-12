@@ -30,7 +30,7 @@ const COUNTER_API_URL = 'https://sua-api-personalizada.com/api/counter/next_os';
 const isProductionApiAvailable = typeof __api_key_production !== 'undefined' && __api_key_production !== '';
 const styles = {
     container: {
-        padding: '20px 2%',
+        padding: '20px 10%',
         width: '100%',
         maxWidth: 'auto',
         margin: '0 auto',
@@ -567,9 +567,11 @@ const FormRadioGroup_2 = ({ label, name, value, onChange, options, required = fa
 };
 
 
+
 export default function NovaOS() {
     // Definimos userId, mas como não estamos a usar Firebase/Auth, usamos um UUID aleatório
     const [userId] = useState(crypto.randomUUID());
+    
     const initialFormData = {
         cliente: '',
         desc_trab: '',
@@ -670,16 +672,51 @@ export default function NovaOS() {
         };
         getNextOSNumber();
     }, [userId, shouldAttemptApi, formData.num_o_s]); // Adicionada dependência implícita de num_o_s para re-fetch após submissão
+
+
     // Handler para mudança nos campos do formulário
+    const camposEstritamenteNumericos = [
+        'num_orc', 'num_pag', 'tiragem', 'cores_miolo', 'miolo_gramas', 
+        'bobine_miolo', 'cores_capa', 'capa_gramas', 'bobine_capa', 
+        'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas', 
+    ];   
+    const camposDecimais = ['lombada', 'tempo_operador']; // Aceita ponto para decimais
+    
     const handleChange = (e) => {
         const { name, value, type } = e.target;
-        // Permite string vazia em campos numéricos se o utilizador apagar o conteúdo
-        const newValue = type === 'number' && value === '' ? '' : value;
+        let newValue = value;
+    
+        // 1. LÓGICA DE FILTRAGEM NUMÉRICA AGRESSIVA (Baseada no nome do campo)
+        
+        if (camposEstritamenteNumericos.includes(name)) {
+            // Apenas dígitos 0-9 para campos inteiros
+            newValue = value.replace(/[^0-9]/g, '');
+        } else if (camposDecimais.includes(name)) {
+            // Permite dígitos e ponto decimal (para lombada)
+            newValue = value.replace(/[^0-9.]/g, '');
+            // Opcional: Impedir múltiplos pontos decimais
+            const parts = newValue.split('.');
+            if (parts.length > 2) {
+                newValue = parts[0] + '.' + parts.slice(1).join('');
+            }
+        }
+    
+        // 2. LÓGICA EXISTENTE (Garantir string vazia)
+        // Se o valor filtrado for string vazia, guardamos string vazia.
+        // NOTA: Removemos a verificação `type === 'number'` porque agora são todos 'text'.
+        if (newValue === '') {
+            newValue = '';
+        }
+        
+        // O valor 'newValue' é o valor final limpo.
+        
         setFormData(prev => {
             let newState = { ...prev, [name]: newValue };
-            // Lógica para restrição de Máquina com base na Impressão
+    
+            // Lógica para restrição de Máquina (SEM ALTERAÇÕES AQUI)
             if (name === 'impressao') {
                 const newMaquinaOptions = getMaquinaOptions(newValue);
+                
                 // 1. Limpar a Máquina se o valor anterior for inválido para a nova Impressão
                 if (prev.maquina && !newMaquinaOptions.includes(prev.maquina)) {
                     newState.maquina = '';
@@ -787,9 +824,9 @@ export default function NovaOS() {
                         type="text"
                         readOnly={true}
                         placeholder="Gerado automaticamente" />
-                    <FormInput label="Nº Orçamento" name="num_orc" value={formData.num_orc} onChange={handleChange} type="text" />
-                    <FormInput label="Cliente" name="cliente" value={formData.cliente} onChange={handleChange} required fullWidth />
-                    <FormInput label="Descrição do Trabalho" name="desc_trab" value={formData.desc_trab} onChange={handleChange} isTextArea required fullWidth />
+                    <FormInput label="Nº Orçamento" name="num_orc" value={formData.num_orc} onChange={handleChange} type="numeric" />
+                    <FormInput label="Cliente" name="cliente" value={formData.cliente} onChange={handleChange} required fullWidth type="text" />
+                    <FormInput label="Descrição do Trabalho" name="desc_trab" value={formData.desc_trab} onChange={handleChange} isTextArea required type="text" fullWidth />
                     <SubGrid layoutType="three">
                         <FormInput label="Data de Abertura" name="data_aber" value={formData.data_aber} onChange={handleChange} type="date" required readOnly />
                         <FormInput label="Data de Receção" name="data_recep" value={formData.data_recep} onChange={handleChange} type="date" />
@@ -815,9 +852,10 @@ export default function NovaOS() {
                             options={FORMATO_SUGGESTIONS}
                             placeholder="Selecione..."
                             required={false}
-                            canCreate={true} />
-                        <FormInput label="Nº Páginas" name="num_pag" value={formData.num_pag} onChange={handleChange} type="number" />
-                        <FormInput label="Tiragem" name="tiragem" value={formData.tiragem} onChange={handleChange} type="number" />
+                            canCreate={true}
+                            type="text" />
+                        <FormInput label="Nº Páginas" name="num_pag" value={formData.num_pag} onChange={handleChange} type="numeric" />
+                        <FormInput label="Tiragem" name="tiragem" value={formData.tiragem} onChange={handleChange} type="numeric" />
                     </SubGrid>
                     <CustomSelect
                         label="Impressao"
@@ -852,11 +890,11 @@ export default function NovaOS() {
                         required
                         canCreate={true}
                         placeholder="Selecione..." />
-                    <FormInput label="Cores" name="cores_miolo" value={formData.cores_miolo} onChange={handleChange} type="number" />
+                    <FormInput label="Cores" name="cores_miolo" value={formData.cores_miolo} onChange={handleChange} type="numeric" />
                     <SubGrid layoutType="three">
-                        <FormInput label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} />
-                        <FormInput label="Gramagem" name="miolo_gramas" value={formData.miolo_gramas} onChange={handleChange} type="number" />
-                        <FormInput label="Bobine" name="bobine_miolo" value={formData.bobine_miolo} onChange={handleChange} />
+                        <FormInput label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} type="text" />
+                        <FormInput label="Gramagem (g)" name="miolo_gramas" value={formData.miolo_gramas} onChange={handleChange} type="numeric" />
+                        <FormInput label="Bobine (cm)" name="bobine_miolo" value={formData.bobine_miolo} onChange={handleChange} type="numeric" />
                     </SubGrid>
                     <SubGrid_2>
                         <div
@@ -932,21 +970,16 @@ export default function NovaOS() {
                         </div>
                     </SubGrid_2>
 
-
-
-                    {/* <FormInput label="Verniz" name="verniz_miolo" value={formData.verniz_miolo} onChange={handleChange} /> */}
-                    {/* <FormInput label="Brilho/Mate" name="verniz_miolo_brilho_mate" value={formData.verniz_miolo_brilho_mate} onChange={handleChange} />
-                        <FormInput label="Geral/Reservado" name="verniz_miolo_geral_reservado" value={formData.verniz_miolo_geral_reservado} onChange={handleChange} /> */}
-                    <FormInput label="Observações Miolo" name="observacoes_miolo" value={formData.observacoes_miolo} onChange={handleChange} isTextArea fullWidth />
+                    <FormInput label="Observações Miolo" name="observacoes_miolo" value={formData.observacoes_miolo} onChange={handleChange} isTextArea fullWidth type="text" />
                 </Section>
                 {/* 4. CARACTERÍSTICAS CAPA */}
                 <Section title="CARACTERÍSTICAS CAPA" layoutType="two-fixed">
-                    <FormInput label="Lombada (mm)" name="lombada" value={formData.lombada} onChange={handleChange} type="number" step="0.01" />
-                    <FormInput label="Cores" name="cores_capa" value={formData.cores_capa} onChange={handleChange} type="number" />
+                    <FormInput label="Lombada (mm)" name="lombada" value={formData.lombada} onChange={handleChange} type="numeric" step="0.01" />
+                    <FormInput label="Cores" name="cores_capa" value={formData.cores_capa} onChange={handleChange} type="numeric" />
                     <SubGrid layoutType="three">
-                        <FormInput label="Papel" name="papel_capa" value={formData.papel_capa} onChange={handleChange} />
-                        <FormInput label="Gramagem" name="capa_gramas" value={formData.capa_gramas} onChange={handleChange} type="number" />
-                        <FormInput label="Bobine" name="bobine_capa" value={formData.bobine_capa} onChange={handleChange} />
+                        <FormInput label="Papel" name="papel_capa" value={formData.papel_capa} onChange={handleChange} type="text" />
+                        <FormInput label="Gramagem (g)" name="capa_gramas" value={formData.capa_gramas} onChange={handleChange} type="numeric" />
+                        <FormInput label="Bobine (cm)" name="bobine_capa" value={formData.bobine_capa} onChange={handleChange} type="numeric" />
                     </SubGrid>
                     <SubGrid layoutType="four" title="">
                         <FormInput label="Verniz" name="verniz_capa" value={formData.verniz_capa} onChange={handleChange} />
@@ -954,24 +987,24 @@ export default function NovaOS() {
                         <FormInput label="Geral/Reservado" name="verniz_capa_geral_reservado" value={formData.verniz_capa_geral_reservado} onChange={handleChange} />
                         <FormInput label="Frente/Verso" name="verniz_capa_f_v" value={formData.verniz_capa_f_v} onChange={handleChange} />
                     </SubGrid>
-                    <FormInput label="Observações Capa" name="observacoes_capa" value={formData.observacoes_capa} onChange={handleChange} isTextArea fullWidth />
+                    <FormInput label="Observações Capa" name="observacoes_capa" value={formData.observacoes_capa} onChange={handleChange} type="text" isTextArea fullWidth />
                 </Section>
                 {/* 5. PROVAS E CHAPAS*/}
                 <Section title="INFORMAÇÃO PROVAS E CHAPAS" layoutType="four">
-                    <FormInput label="N.º Provas Cor" name="provas_cor" value={formData.provas_cor} onChange={handleChange} type="number" />
-                    <FormInput label="Ozalide Digital" name="ozalide_digital" value={formData.ozalide_digital} onChange={handleChange} type="number" />
-                    <FormInput label="Provas Konica" name="provas_konica" value={formData.provas_konica} onChange={handleChange} type="number" />
-                    <FormInput label="N.º Chapas" name="quantidade_chapas" value={formData.quantidade_chapas} onChange={handleChange} type="number" />
+                    <FormInput label="N.º Provas Cor" name="provas_cor" value={formData.provas_cor} onChange={handleChange} type="numeric" />
+                    <FormInput label="N.º Ozalide Digital" name="ozalide_digital" value={formData.ozalide_digital} onChange={handleChange} type="numeric" />
+                    <FormInput label="Provas Konica" name="provas_konica" value={formData.provas_konica} onChange={handleChange} type="numeric" />
+                    <FormInput label="N.º Chapas" name="quantidade_chapas" value={formData.quantidade_chapas} onChange={handleChange} type="numeric" />
                 </Section>
                 {/* 6. ENTREGA/EXPEDIÇÃO TRABALHO*/}
                 <Section title="ENTREGA/EXPEDIÇÃO" layoutType="two-fixed">
-                    <FormInput label="Local de Entrega" name="local_entrega" value={formData.local_entrega} onChange={handleChange} />
-                    <FormInput label="Forma de Expedição" name="forma_expedicao" value={formData.forma_expedicao} onChange={handleChange} />
+                    <FormInput label="Local de Entrega" name="local_entrega" value={formData.local_entrega} onChange={handleChange} type="text" />
+                    <FormInput label="Forma de Expedição" name="forma_expedicao" value={formData.forma_expedicao} onChange={handleChange} type="text" />
                 </Section>
                 {/* 7. OPERADOR*/}
                 <Section title="OPERADOR" layoutType="two-fixed">
                     <FormInput label="Operador" name="operador" value={formData.operador} onChange={handleChange} readOnly />
-                    <FormInput label="Tempo (horas)" name="tempo_operador" value={formData.tempo_operador} onChange={handleChange} type="number" />
+                    <FormInput label="Tempo (horas)" name="tempo_operador" value={formData.tempo_operador} onChange={handleChange} type="numeric" />
                 </Section>
 
 

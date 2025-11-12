@@ -56,7 +56,7 @@ function DashboardHome() {
   }
 
   if (error) {
-    return <div style={{ color: 'red' }}>Erro ao carregar dados: {error}</div>;
+    return <div style={{ color: 'red' }}> {error}</div>;
   }
   
   if (ordensServico.length === 0) {

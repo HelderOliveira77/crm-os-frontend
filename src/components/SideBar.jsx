@@ -9,10 +9,10 @@ import Logo from '../assets/logos multiponto Branco.png'; // <-- AJUSTAR ESTE CA
 
 // [Estilos básicos para demonstração - manter para visualização]
 const sideBarStyles = {
-  width: '250px',
+  width: '350px',
   height: 'auto',
   backgroundColor: '#2c3e50', 
-  padding: '20px',
+  padding: '20px 30px',
   color: 'white',
   boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
   textAlign: 'center'
@@ -25,10 +25,11 @@ const navLinkStyle = ({ isActive }) => ({
   display: 'block',
   borderLeft: isActive ? '3px solid #f39c12' : 'none',
   paddingLeft: isActive ? '17px' : '20px',
+   fontSize: '1.6rem'
 });
 
 const logoStyles = {
-  width: '200px', // Ajuste este valor para o tamanho desejado
+  width: '320px', // Ajuste este valor para o tamanho desejado
   height: 'auto',
   marginBottom: '10px' // Espaçamento entre o logo e o título
 };
@@ -53,7 +54,7 @@ function SideBar() {
       />
 
 
-      <h3> GESTÃO <br></br> ORDENS SERVIÇO </h3>
+      <h2> GESTÃO <br></br> ORDENS SERVIÇO </h2>
       <hr style={{ borderColor: '#34495e', marginBottom: '20px' }} />
 
       <nav>
