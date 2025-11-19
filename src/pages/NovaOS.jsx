@@ -172,7 +172,11 @@ const styles = {
         backgroundColor: '#fff',
         borderRadius: '0 0 8px 8px',
         flexWrap: 'wrap',
-    }
+    },
+    
+
+      
+
 };
 
 const getSectionContentStyle = (layoutType) => {
