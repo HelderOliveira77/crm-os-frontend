@@ -173,9 +173,9 @@ const styles = {
         borderRadius: '0 0 8px 8px',
         flexWrap: 'wrap',
     },
-    
 
-      
+
+
 
 };
 
@@ -290,32 +290,43 @@ const SubGrid = ({ layoutType = 'two-fixed', children, title }) => {
 };
 const SubGrid_2 = ({ layoutType = 'two-fixed', children, title }) => {
     const style = getSectionContentStyle(layoutType);
+
     return (
         <div
             style={{
-                gridColumn: '1 / 0', // Ocupa a largura total da área do formulário
-                padding: '5px 0',
-                borderTop: title ? '1px dashed #ccc' : 'none',
-                marginTop: title ? '15px' : '0'
-            }} >
+                gridColumn: '1 / -1',               // ocupa a largura total da grid
+                //justifySelf: 'start',
+                padding: '0.0rem 0',             // 5px → 0.3125rem
+                borderTop: title ? '0px dashed #ccc' : 'none',
+                marginTop: title ? '0rem' : '0', // 15px → 0.9375rem
+            }}
+        >
             {title && (
-                <h4 style={{ color: '#34495e', marginBottom: '15px', fontSize: '1.1em' }}>
+                <h4 style={{ color: '#34495e', marginBottom: '15px', fontSize: '1.0em' }}>
                     {title}
                 </h4>
             )}
+
+            {/* ---------- Área que contém os grupos ---------- */}
             <div
                 style={{
                     ...style,
-                    // CRÍTICO: Alinha os ITENS no canto esquerdo da CÉLULA
-                    justifyItems: 'flex-start',
-                    // CRÍTICO: Alinha os ITENS no topo da CÉLULA (verticalmente)
+                    display: 'grid',
+                    // Cada grupo tem no mínimo 180 px, mas pode crescer até preencher a linha
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                    gap: '1rem',                     // espaçamento responsivo entre os grupos
                     alignItems: 'flex-start',
-                }}>
+                    // opcional: limitar a largura máxima da caixa inteira
+                    maxWidth: '1200px',
+                    margin: '0 auto',                // centraliza em telas largas
+                }}
+            >
                 {children}
             </div>
         </div>
     );
 };
+
 const CustomSelect = ({
     label,
     name,
@@ -575,7 +586,7 @@ const FormRadioGroup_2 = ({ label, name, value, onChange, options, required = fa
 export default function NovaOS() {
     // Definimos userId, mas como não estamos a usar Firebase/Auth, usamos um UUID aleatório
     const [userId] = useState(crypto.randomUUID());
-    
+
     const initialFormData = {
         cliente: '',
         desc_trab: '',
@@ -680,18 +691,18 @@ export default function NovaOS() {
 
     // Handler para mudança nos campos do formulário
     const camposEstritamenteNumericos = [
-        'num_orc', 'num_pag', 'tiragem', 'cores_miolo', 'miolo_gramas', 
-        'bobine_miolo', 'cores_capa', 'capa_gramas', 'bobine_capa', 
-        'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas', 
-    ];   
+        'num_orc', 'num_pag', 'tiragem', 'cores_miolo', 'miolo_gramas',
+        'bobine_miolo', 'cores_capa', 'capa_gramas', 'bobine_capa',
+        'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas',
+    ];
     const camposDecimais = ['lombada', 'tempo_operador']; // Aceita ponto para decimais
-    
+
     const handleChange = (e) => {
         const { name, value, type } = e.target;
         let newValue = value;
-    
+
         // 1. LÓGICA DE FILTRAGEM NUMÉRICA AGRESSIVA (Baseada no nome do campo)
-        
+
         if (camposEstritamenteNumericos.includes(name)) {
             // Apenas dígitos 0-9 para campos inteiros
             newValue = value.replace(/[^0-9]/g, '');
@@ -704,23 +715,23 @@ export default function NovaOS() {
                 newValue = parts[0] + '.' + parts.slice(1).join('');
             }
         }
-    
+
         // 2. LÓGICA EXISTENTE (Garantir string vazia)
         // Se o valor filtrado for string vazia, guardamos string vazia.
         // NOTA: Removemos a verificação `type === 'number'` porque agora são todos 'text'.
         if (newValue === '') {
             newValue = '';
         }
-        
+
         // O valor 'newValue' é o valor final limpo.
-        
+
         setFormData(prev => {
             let newState = { ...prev, [name]: newValue };
-    
+
             // Lógica para restrição de Máquina (SEM ALTERAÇÕES AQUI)
             if (name === 'impressao') {
                 const newMaquinaOptions = getMaquinaOptions(newValue);
-                
+
                 // 1. Limpar a Máquina se o valor anterior for inválido para a nova Impressão
                 if (prev.maquina && !newMaquinaOptions.includes(prev.maquina)) {
                     newState.maquina = '';
@@ -900,80 +911,59 @@ export default function NovaOS() {
                         <FormInput label="Gramagem (g)" name="miolo_gramas" value={formData.miolo_gramas} onChange={handleChange} type="numeric" />
                         <FormInput label="Bobine (cm)" name="bobine_miolo" value={formData.bobine_miolo} onChange={handleChange} type="numeric" />
                     </SubGrid>
-                    <SubGrid_2>
-                        <div
-                            style={{
-                                gridColumn: '1 / -1', // ocupa toda a largura da grid
-                                border: '1px solid #d1d5db',
-                                borderRadius: '6px',
-                                padding: '10px 20px',
-                                marginTop: '0px',
-                                marginBottom: '20px',
-                                boxSizing: 'border-box',
-                                backgroundColor: '#fff',
-                            }}
-                        >
-                            {/* Título do grupo */}
-                            <div
-                                style={{
-                                    fontWeight: '600',
-                                    fontSize: '1rem',
-                                    color: '#374151',
-                                    //borderBottom: '1px dashed #e5e7eb',
-                                    paddingBottom: '5px',
-                                    marginBottom: '5px',
-                                }}
-                            >
+
+                    <SubGrid_2 title="Opções de Verniz">
+                        {/* <-- Caixa que envolve os grupos --> */}
+                        <div style={{
+                            border: '1px solid #d1d5db', 
+                            borderRadius: '6px',
+                            padding: '1rem',                // 16 px → 1rem, mantém consistência
+                            backgroundColor: '#fff',
+                            //boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+                            marginBottom: '1.0rem',        // espaçamento inferior da caixa
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                            gap: '1rem',
+                            //marginRight: 'auto',   // empurra o bloco para a esquerda
+                            marginLeft: 0,         // garante que não haja margem à esquerda
+                        }}  >
+                            {/* Grupo 1 */}
+                            <div className="optionItem">
+                                <FormRadioGroup_2
+                                    label="Verniz"
+                                    name="verniz_miolo"
+                                    value={formData.verniz_miolo}
+                                    onChange={handleChange}
+                                    options={['Sim', 'Não']}
+                                    spacing={20}
+                                />
                             </div>
-                            {/* ✅ Todos os 3 grupos numa única linha */}
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    width: '100%',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'flex-start',
-                                    gap: '120px', // 🔥 aumenta o espaço horizontal entre os grupos
-                                }}
-                            >
-                                {/* GRUPO 1: VERNIZ */}
-                                <div style={{ flex: '0 0 auto' }}>
-                                    <FormRadioGroup_2
-                                        label="Verniz"
-                                        name="verniz_miolo"
-                                        value={formData.verniz_miolo}
-                                        onChange={handleChange}
-                                        options={['Sim', 'Não']}
-                                        spacing={20} // 🔥 espaço entre SIM e NÃO
-                                    />
-                                </div>
 
-                                {/* GRUPO 2: BRILHO/MATE */}
-                                <div style={{ flex: '0 0 auto' }}>
-                                    <FormRadioGroup_2
-                                        label="Brilho / Mate"
-                                        name="verniz_miolo_brilho_mate"
-                                        value={formData.verniz_miolo_brilho_mate}
-                                        onChange={handleChange}
-                                        options={['Brilho', 'Mate']}
-                                        spacing={20} 
-                                    />
-                                </div>
+                            {/* Grupo 2 */}
+                            <div className="optionItem">
+                                <FormRadioGroup_2
+                                    label="Brilho / Mate"
+                                    name="verniz_miolo_brilho_mate"
+                                    value={formData.verniz_miolo_brilho_mate}
+                                    onChange={handleChange}
+                                    options={['Brilho', 'Mate']}
+                                    spacing={20}
+                                />
+                            </div>
 
-                                {/* GRUPO 3: GERAL/RESERVADO */}
-                                <div style={{ flex: '0 0 auto' }}>
-                                    <FormRadioGroup_2
-                                        label="Geral / Reservado"
-                                        name="verniz_miolo_geral_reservado"
-                                        value={formData.verniz_miolo_geral_reservado}
-                                        onChange={handleChange}
-                                        options={['Geral', 'Reservado']}
-                                        spacing={20} 
-                                    />
-                                </div>
+                            {/* Grupo 3 */}
+                            <div className="optionItem">
+                                <FormRadioGroup_2
+                                    label="Geral / Reservado"
+                                    name="verniz_miolo_geral_reservado"
+                                    value={formData.verniz_miolo_geral_reservado}
+                                    onChange={handleChange}
+                                    options={['Geral', 'Reservado']}
+                                    spacing={20}
+                                />
                             </div>
                         </div>
                     </SubGrid_2>
-
                     <FormInput label="Observações Miolo" name="observacoes_miolo" value={formData.observacoes_miolo} onChange={handleChange} isTextArea fullWidth type="text" />
                 </Section>
                 {/* 4. CARACTERÍSTICAS CAPA */}
@@ -985,12 +975,56 @@ export default function NovaOS() {
                         <FormInput label="Gramagem (g)" name="capa_gramas" value={formData.capa_gramas} onChange={handleChange} type="numeric" />
                         <FormInput label="Bobine (cm)" name="bobine_capa" value={formData.bobine_capa} onChange={handleChange} type="numeric" />
                     </SubGrid>
-                    <SubGrid layoutType="four" title="">
-                        <FormInput label="Verniz" name="verniz_capa" value={formData.verniz_capa} onChange={handleChange} />
-                        <FormInput label="Brilho/Mate" name="verniz_capa_brilho_mate" value={formData.verniz_capa_brilho_mate} onChange={handleChange} />
-                        <FormInput label="Geral/Reservado" name="verniz_capa_geral_reservado" value={formData.verniz_capa_geral_reservado} onChange={handleChange} />
-                        <FormInput label="Frente/Verso" name="verniz_capa_f_v" value={formData.verniz_capa_f_v} onChange={handleChange} />
-                    </SubGrid>
+                    <SubGrid_2 title="Opções de Verniz">
+                        {/* Grupo 1 */}
+                        <div>
+                            <FormRadioGroup_2
+                                label="Verniz"
+                                name="verniz_miolo"
+                                value={formData.verniz_miolo}
+                                onChange={handleChange}
+                                options={['Sim', 'Não']}
+                                spacing={20}
+                            />
+                        </div>
+
+                        {/* Grupo 2 */}
+                        <div>
+                            <FormRadioGroup_2
+                                label="Brilho / Mate"
+                                name="verniz_miolo_brilho_mate"
+                                value={formData.verniz_miolo_brilho_mate}
+                                onChange={handleChange}
+                                options={['Brilho', 'Mate']}
+                                spacing={20}
+                            />
+                        </div>
+
+                        {/* Grupo 3 */}
+                        <div>
+                            <FormRadioGroup_2
+                                label="Geral / Reservado"
+                                name="verniz_miolo_geral_reservado"
+                                value={formData.verniz_miolo_geral_reservado}
+                                onChange={handleChange}
+                                options={['Geral', 'Reservado']}
+                                spacing={20}
+                            />
+                        </div>
+
+                        <div>
+                            <FormRadioGroup_2
+                                label="Frente / Verso"
+                                name="verniz_capa_frente_verso"
+                                value={formData.verniz_miolo_geral_reservado}
+                                onChange={handleChange}
+                                options={['Frente', 'Verso']}
+                                spacing={20}
+                            />
+                        </div>
+
+                    </SubGrid_2>
+
                     <FormInput label="Observações Capa" name="observacoes_capa" value={formData.observacoes_capa} onChange={handleChange} type="text" isTextArea fullWidth />
                 </Section>
                 {/* 5. PROVAS E CHAPAS*/}
