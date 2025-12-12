@@ -298,7 +298,8 @@ const SubGrid_2 = ({ layoutType = 'two-fixed', children, title }) => {
                 //justifySelf: 'start',
                 padding: '0.0rem 0',             // 5px → 0.3125rem
                 borderTop: title ? '0px dashed #ccc' : 'none',
-                marginTop: title ? '0rem' : '0', // 15px → 0.9375rem
+                // -0.625rem equivale a -10px, o que compensa parte do row-gap da grelha principal.
+                marginTop: title ? '-1.25rem' : '0', // 15px → 0.9375rem
             }}
         >
             {title && (
@@ -317,8 +318,9 @@ const SubGrid_2 = ({ layoutType = 'two-fixed', children, title }) => {
                     gap: '1rem',                     // espaçamento responsivo entre os grupos
                     alignItems: 'flex-start',
                     // opcional: limitar a largura máxima da caixa inteira
-                    maxWidth: '1200px',
-                    margin: '0 auto',                // centraliza em telas largas
+                    // maxWidth: '1200px',
+                    // ALTERAÇÃO CRÍTICA: Remove a centralização e alinha à esquerda
+                    margin: '0', 
                 }}
             >
                 {children}
@@ -540,13 +542,13 @@ const FormRadioGroup_2 = ({ label, name, value, onChange, options, required = fa
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-start',
-            padding: '0 5px', // Pequeno padding interno para o conteúdo
+            padding: '0 0px', // Pequeno padding interno para o conteúdo
         }}>
 
             {/* RÓTULO: Altura MINIMA, mas sem minHeight fixo */}
             <label style={{
                 display: 'block',
-                paddingBottom: '8px',
+                paddingBottom: '10px',
                 fontWeight: '600',
                 fontSize: '0.9rem',
                 color: '#374151',
@@ -923,7 +925,7 @@ export default function NovaOS() {
                             marginBottom: '1.0rem',        // espaçamento inferior da caixa
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                            gap: '1rem',
+                            gap: '5rem',
                             //marginRight: 'auto',   // empurra o bloco para a esquerda
                             marginLeft: 0,         // garante que não haja margem à esquerda
                         }}  >
