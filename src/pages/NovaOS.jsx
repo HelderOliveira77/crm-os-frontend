@@ -978,53 +978,67 @@ export default function NovaOS() {
                         <FormInput label="Bobine (cm)" name="bobine_capa" value={formData.bobine_capa} onChange={handleChange} type="numeric" />
                     </SubGrid>
                     <SubGrid_2 title="Opções de Verniz">
-                        {/* Grupo 1 */}
-                        <div>
-                            <FormRadioGroup_2
-                                label="Verniz"
-                                name="verniz_miolo"
-                                value={formData.verniz_miolo}
-                                onChange={handleChange}
-                                options={['Sim', 'Não']}
-                                spacing={20}
-                            />
-                        </div>
+                        {/* <-- Caixa que envolve os grupos --> */}
+                        <div style={{
+                            border: '1px solid #d1d5db', 
+                            borderRadius: '6px',
+                            padding: '1rem',                // 16 px → 1rem, mantém consistência
+                            backgroundColor: '#fff',
+                            //boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+                            marginBottom: '1.0rem',        // espaçamento inferior da caixa
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                            gap: '5rem',
+                            //marginRight: 'auto',   // empurra o bloco para a esquerda
+                            marginLeft: 0,         // garante que não haja margem à esquerda
+                        }}  >
+                            {/* Grupo 1 */}
+                            <div className="optionItem">
+                                <FormRadioGroup_2
+                                    label="Verniz"
+                                    name="verniz_capa"
+                                    value={formData.verniz_capa}
+                                    onChange={handleChange}
+                                    options={['Sim', 'Não']}
+                                    spacing={20}
+                                />
+                            </div>
 
-                        {/* Grupo 2 */}
-                        <div>
-                            <FormRadioGroup_2
-                                label="Brilho / Mate"
-                                name="verniz_miolo_brilho_mate"
-                                value={formData.verniz_miolo_brilho_mate}
-                                onChange={handleChange}
-                                options={['Brilho', 'Mate']}
-                                spacing={20}
-                            />
-                        </div>
+                            {/* Grupo 2 */}
+                            <div className="optionItem">
+                                <FormRadioGroup_2
+                                    label="Brilho / Mate"
+                                    name="verniz_capa_brilho_mate"
+                                    value={formData.verniz_capa_brilho_mate}
+                                    onChange={handleChange}
+                                    options={['Brilho', 'Mate']}
+                                    spacing={20}
+                                />
+                            </div>
 
-                        {/* Grupo 3 */}
-                        <div>
-                            <FormRadioGroup_2
-                                label="Geral / Reservado"
-                                name="verniz_miolo_geral_reservado"
-                                value={formData.verniz_miolo_geral_reservado}
-                                onChange={handleChange}
-                                options={['Geral', 'Reservado']}
-                                spacing={20}
-                            />
+                            {/* Grupo 3 */}
+                            <div className="optionItem">
+                                <FormRadioGroup_2
+                                    label="Geral / Reservado"
+                                    name="verniz_capa_geral_reservado"
+                                    value={formData.verniz_capa_geral_reservado}
+                                    onChange={handleChange}
+                                    options={['Geral', 'Reservado']}
+                                    spacing={20}
+                                />
+                            </div>
+                            {/* Grupo 4 */}
+                            <div className="optionItem">
+                                <FormRadioGroup_2
+                                    label="Frente / Verso"
+                                    name="verniz_capa_f_v"
+                                    value={formData.verniz_capa_f_v}
+                                    onChange={handleChange}
+                                    options={['Frente', 'Verso']}
+                                    spacing={20}
+                                />
+                            </div>                            
                         </div>
-
-                        <div>
-                            <FormRadioGroup_2
-                                label="Frente / Verso"
-                                name="verniz_capa_frente_verso"
-                                value={formData.verniz_miolo_geral_reservado}
-                                onChange={handleChange}
-                                options={['Frente', 'Verso']}
-                                spacing={20}
-                            />
-                        </div>
-
                     </SubGrid_2>
 
                     <FormInput label="Observações Capa" name="observacoes_capa" value={formData.observacoes_capa} onChange={handleChange} type="text" isTextArea fullWidth />
