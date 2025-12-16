@@ -78,6 +78,7 @@ function DashboardHome() {
         <thead>
           <tr style={{ backgroundColor: '#f2f2f2' }}>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>ID</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Nº Ordem</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Cliente</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Status</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Ações</th>
@@ -88,6 +89,7 @@ function DashboardHome() {
           {ordensServico.map(os => (
             <tr key={os.id}>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.id}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.num_o_s}</td>
               {/* Ajuste 'cliente' e 'status' para corresponder aos nomes exatos dos campos da sua API */}
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.cliente || os.Client?.name || 'N/A'}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.status || 'Desconhecido'}</td>
