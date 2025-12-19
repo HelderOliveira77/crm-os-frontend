@@ -838,7 +838,7 @@ export default function NovaOS() {
                         name="num_o_s"
                         value={formData.num_o_s}
                         onChange={handleChange}
-                        type="text"
+                        type="numeric"
                         readOnly={true}
                         placeholder="Gerado automaticamente" />
                     <FormInput label="Nº Orçamento" name="num_orc" value={formData.num_orc} onChange={handleChange} type="numeric" />

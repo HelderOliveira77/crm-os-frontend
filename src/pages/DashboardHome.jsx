@@ -81,6 +81,9 @@ function DashboardHome() {
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Nº Ordem</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Cliente</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Status</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Data Abertura</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Formato</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Cores Miolo</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Ações</th>
           </tr>
         </thead>
@@ -93,6 +96,10 @@ function DashboardHome() {
               {/* Ajuste 'cliente' e 'status' para corresponder aos nomes exatos dos campos da sua API */}
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.cliente || os.Client?.name || 'N/A'}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.status || 'Desconhecido'}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.data_aber || 'Desconhecido'}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.formato || 'Desconhecido'}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.cores_miolo || 'Desconhecido'}</td>
+
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                 <button>Ver Detalhes</button>
               </td>

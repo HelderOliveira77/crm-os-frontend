@@ -156,6 +156,7 @@ function ListaOS() {
                                     Ver/Editar
                                 </button>
                             </td>
+                            <td style={tdStyles}>{order.formato}</td>
                         </tr>
                     ))}
                 </tbody>
