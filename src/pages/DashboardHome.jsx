@@ -84,6 +84,7 @@ function DashboardHome() {
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Data Abertura</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Formato</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Cores Miolo</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Observações</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Ações</th>
           </tr>
         </thead>
@@ -99,6 +100,7 @@ function DashboardHome() {
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.data_aber || 'Desconhecido'}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.formato || 'Desconhecido'}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.cores_miolo || 'Desconhecido'}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{os.observacoes_miolo || 'Desconhecido'}</td>
 
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                 <button>Ver Detalhes</button>
