@@ -132,7 +132,7 @@ function ListaOS() {
                 <thead>
                     <tr>
                         <th style={thStyles}>ID</th>
-                        <th style={thStyles}>Nº OS (Título)</th>
+                        <th style={thStyles}>Nº OS (Ordem Serviço)</th>
                         <th style={thStyles}>Cliente</th>
                         <th style={thStyles}>Status</th>
                         <th style={thStyles}>Criado Em</th>
@@ -147,9 +147,9 @@ function ListaOS() {
                             style={trStyles}
                         >
                             <td style={tdStyles}>{order.id}</td>
-                            <td style={tdStyles}>{order.title}</td> 
-                            <td style={tdStyles}>{order.client}</td> 
-                            <td style={tdStyles}>{order.status}</td>
+                            <td style={tdStyles}>{order.num_o_s}</td> 
+                            <td style={tdStyles}>{order.cliente}</td> 
+                            <td style={tdStyles}>{order.estado}</td>
                             <td style={tdStyles}>{new Date(order.createdAt).toLocaleDateString()}</td>
                             <td style={tdStyles}>
                                 <button onClick={(e) => { e.stopPropagation(); handleRowClick(order.id); }}>

@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, Link } from 'react-router-dom'; // Necessário para o Dashboard
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 // Variáveis de ambiente simuladas
 const dummyUser = { username: 'OperadorDemo' };
 const FORCE_API_TEST_MODE = false; // Defina para true para forçar o teste da API, mesmo que __api_key_production esteja undefined
 // Função de navegação (simulada, pois não temos o hook useNavigate aqui)
-const navigate = (path) => {
+/* const navigate = (path) => {
     console.warn(`Ação de Navegação: Cancelar / Voltar para ${path}`);
     if (typeof window !== 'undefined' && path !== '/dashboard') {
-        window.history.back(); // Simula o back para o caso de Cancelar
+        window.history.back();
     }
-};
+}; */
 // Constantes
 const ESTADO_OPTIONS = ['ABERTA', 'PENDENTE', 'FECHADO'];
 const FORMATO_SUGGESTIONS = ['A0 - 1189x841', 'A1 - 841x594', 'A2 - 594x420', 'A3 - 420x297', 'A4 - 297x210',
@@ -173,10 +176,6 @@ const styles = {
         borderRadius: '0 0 8px 8px',
         flexWrap: 'wrap',
     },
-
-
-
-
 };
 
 const getSectionContentStyle = (layoutType) => {
@@ -586,8 +585,13 @@ const FormRadioGroup_2 = ({ label, name, value, onChange, options, required = fa
 
 
 export default function NovaOS() {
+
+    const { token, user } = useAuth();
+
     // Definimos userId, mas como não estamos a usar Firebase/Auth, usamos um UUID aleatório
     const [userId] = useState(crypto.randomUUID());
+
+    const navigate = useNavigate(); // Instanciação correta
 
     const initialFormData = {
         cliente: '',
@@ -691,124 +695,77 @@ export default function NovaOS() {
     }, [userId, shouldAttemptApi, formData.num_o_s]); // Adicionada dependência implícita de num_o_s para re-fetch após submissão
 
 
-    // Handler para mudança nos campos do formulário
+    // 1. DEFINIÇÃO DAS LISTAS DE CAMPOS (Dentro do componente)
     const camposEstritamenteNumericos = [
         'num_orc', 'num_pag', 'tiragem', 'cores_miolo', 'miolo_gramas',
         'bobine_miolo', 'cores_capa', 'capa_gramas', 'bobine_capa',
         'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas',
     ];
-    const camposDecimais = ['lombada', 'tempo_operador']; // Aceita ponto para decimais
+    const camposDecimais = ['lombada', 'tempo_operador'];
+
 
     const handleChange = (e) => {
-        const { name, value, type } = e.target;
+        const { name, value } = e.target;
         let newValue = value;
 
-        // 1. LÓGICA DE FILTRAGEM NUMÉRICA AGRESSIVA (Baseada no nome do campo)
-
         if (camposEstritamenteNumericos.includes(name)) {
-            // Apenas dígitos 0-9 para campos inteiros
             newValue = value.replace(/[^0-9]/g, '');
         } else if (camposDecimais.includes(name)) {
-            // Permite dígitos e ponto decimal (para lombada)
             newValue = value.replace(/[^0-9.]/g, '');
-            // Opcional: Impedir múltiplos pontos decimais
             const parts = newValue.split('.');
-            if (parts.length > 2) {
-                newValue = parts[0] + '.' + parts.slice(1).join('');
-            }
+            if (parts.length > 2) newValue = parts[0] + '.' + parts.slice(1).join('');
         }
-
-        // 2. LÓGICA EXISTENTE (Garantir string vazia)
-        // Se o valor filtrado for string vazia, guardamos string vazia.
-        // NOTA: Removemos a verificação `type === 'number'` porque agora são todos 'text'.
-        if (newValue === '') {
-            newValue = '';
-        }
-
-        // O valor 'newValue' é o valor final limpo.
 
         setFormData(prev => {
             let newState = { ...prev, [name]: newValue };
-
-            // Lógica para restrição de Máquina (SEM ALTERAÇÕES AQUI)
-            if (name === 'impressao') {
-                const newMaquinaOptions = getMaquinaOptions(newValue);
-
-                // 1. Limpar a Máquina se o valor anterior for inválido para a nova Impressão
-                if (prev.maquina && !newMaquinaOptions.includes(prev.maquina)) {
-                    newState.maquina = '';
-                    console.log(`Máquina '${prev.maquina}' foi resetada porque é inválida para Impressão: ${newValue}`);
-                }
-                // 2. Pré-selecionar a Máquina se houver apenas uma opção
-                else if (newMaquinaOptions.length === 1 && newMaquinaOptions.length > 0) {
-                    newState.maquina = newMaquinaOptions[0];
-                }
-                // 3. Limpar a Máquina se Impressão for N/A
-                if (newValue === 'N/A') {
-                    newState.maquina = '';
-                }
-            }
+            // ... (mantenha a sua lógica de 'impressao' e 'maquina' aqui)
             return newState;
         });
     };
     // Handler para submissão do formulário
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (osLoading) {
-            setMessage({ type: 'error', text: 'Aguarde a atribuição do número de Ordem de Serviço.' });
-            return;
-        }
-        const currentMaquinaOptions = getMaquinaOptions(formData.impressao);
-        const isMaquinaRequired = currentMaquinaOptions.length > 0;
-        // Validação básica
-        if (!formData.cliente || !formData.desc_trab || !formData.estado || !formData.impressao || (isMaquinaRequired && !formData.maquina)) {
-            setMessage({ type: 'error', text: 'Os campos obrigatórios (Cliente, Descrição, Estado, Impressão) e o campo Máquina (se aplicável) devem ser preenchidos.' });
-            return;
-        }
+        if (osLoading) return;
         setLoading(true);
-        setMessage(null);
-        // Simulação de submissão
+
+        // PREPARAÇÃO DOS DADOS (Tratar nulls e números)
+        const dataToSend = { ...formData };
+        const todosCamposNumericos = [...camposEstritamenteNumericos, ...camposDecimais];
+
+        todosCamposNumericos.forEach(campo => {
+            if (dataToSend[campo] === '' || dataToSend[campo] === 'A carregar...') {
+                dataToSend[campo] = null;
+            } else {
+                dataToSend[campo] = Number(dataToSend[campo]);
+            }
+        });
+
         try {
-            const osData = { ...formData, operador_uid: userId };
-            // Simulação de chamada à API para guardar dados
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer simulated-auth-token`,
+                    'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(osData),
+                // ATENÇÃO: Enviar dataToSend e não formData
+                body: JSON.stringify(dataToSend), 
             });
-            // Simulação de sucesso (o utilizador não deve ter que ligar um servidor para ver a app funcionar)
-            const data = { message: 'OS criada com sucesso!', id: formData.num_o_s };
-            await new Promise(resolve => setTimeout(resolve, 800)); // Simular atraso de rede
-            if (response.ok || true) { // Assumindo sucesso na simulação
-                setMessage({ type: 'success', text: `Simulação: OS ${formData.num_o_s} criada com sucesso! Redirecionando...` });
-                // Reset e preparação para a próxima OS
-                setFormData(prev => {
-                    const nextNumOS = shouldAttemptApi ? 'A carregar...' : (parseInt(prev.num_o_s) + 1).toString();
-                    return ({
-                        ...initialFormData,
-                        operador: prev.operador,
-                        data_aber: prev.data_aber,
-                        num_o_s: nextNumOS,
-                        estado: 'ABERTA' // Estado padrão após reset
-                    });
-                });
-                if (shouldAttemptApi) {
-                    setOSLoading(true);
-                    // O useEffect irá tratar de buscar o novo número
-                }
+
+            if (response.ok) {
+                alert('Ordem de Serviço criada com sucesso!');
+                navigate('/dashboard'); 
             } else {
-                setMessage({ type: 'error', text: data.message || 'Simulação: Erro ao criar Ordem de Serviço (verifique o servidor).' });
+                const errorData = await response.json();
+                alert(`Erro ao criar: ${errorData.message || 'Verifique os dados.'}`);
             }
         } catch (error) {
-            console.error("Erro de rede ao criar OS (simulação):", error);
-            setMessage({ type: 'error', text: 'Simulação: Erro de conexão com o servidor.' });
+            console.error("Erro na submissão:", error);
+            alert('Erro de ligação ao servidor.');
         } finally {
             setLoading(false);
         }
     };
+    
     const isOsNumberReady = formData.num_o_s !== '' && formData.num_o_s !== 'A carregar...';
     // Componente de mensagem
     const displayMessage = message ? (
@@ -839,7 +796,7 @@ export default function NovaOS() {
                         value={formData.num_o_s}
                         onChange={handleChange}
                         type="numeric"
-                        readOnly={true}
+                        readOnly={false}
                         placeholder="Gerado automaticamente" />
                     <FormInput label="Nº Orçamento" name="num_orc" value={formData.num_orc} onChange={handleChange} type="numeric" />
                     <FormInput label="Cliente" name="cliente" value={formData.cliente} onChange={handleChange} required fullWidth type="text" />
