@@ -26,7 +26,14 @@ const MAQUINA_MAPPING = {
     'N/A': [], // N/A não tem máquina associada
     'DEFAULT': []
 };
-const ACABAMENTO_OPTIONS = ['COSIDO', 'SERROTADO', 'AGRAFADO', 'COLADO LOMBADA'];
+const ACABAMENTO_OPTIONS = [ 'AGRAFADO', 'COLADO LOMBADA', 'CORTES RETOS', 'COSIDO', 'SEM ACABAMENTO', 'SERROTADO'];
+const PAPEL_OPTIONS = [ 'AUTOCOLANTES', 'CARTE LUMINA', 'COUCHE MATE', 'COUCHE BRILHO', 'COUCHE SILK', 'CREATOR STAR', 'CARTOLINA FOLDING', 'CARTOLINA (Verso cinza)', 
+'ENVIPRESS', 'EAGLE CREAM', 'HOLMEN VIEW', 'IOR', 'LWC', 'NEWSPRESS', 'NEWSPRINT', 'OFFSET', 'OPALE TELADO', 'PAPEL RECICLADO',
+    'UNO FINESS GLOSS', 'UNO PRIME GLOSS', 'UNO BRIGHT SATIN', 'UNO PRIME SATIN', 'UNO WEB WHITE GLOSS', 'UNO WEB WHITE BULKY', 'UPM ULTRA GLOSS', 'UPM COTE ', 'UPM EXO 72 C',
+     'UPM ULTRA H','UPM ULTRA SILK', 'UPM SMART', 'UPM BRIGHT 68 C' ,'R4 GLOSS', 'R4 CHORUS GLOSS',  
+    'RESPECTA GLOSS', 'RIVES DESIGN',  'TUFFCOTE' ];
+
+
 const INITIAL_OS_NUMBER = 1000;
 const API_URL = 'http://localhost:3000/api/os';
 const COUNTER_API_URL = 'https://sua-api-personalizada.com/api/counter/next_os';
@@ -698,7 +705,7 @@ export default function NovaOS() {
     // 1. DEFINIÇÃO DAS LISTAS DE CAMPOS (Dentro do componente)
     const camposEstritamenteNumericos = [
         'num_orc', 'num_pag', 'tiragem', 'cores_miolo', 'miolo_gramas',
-        'bobine_miolo', 'cores_capa', 'capa_gramas', 'bobine_capa',
+        'cores_capa', 'capa_gramas', 
         'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas',
     ];
     const camposDecimais = ['lombada', 'tempo_operador'];
@@ -854,7 +861,7 @@ export default function NovaOS() {
                     <FormInput label="Observações Gerais" name="observacoes_gerais" value={formData.observacoes_gerais} onChange={handleChange} isTextArea fullWidth />
                 </Section>
                 {/* 3. CARACTERÍSTICAS MIOLO */}
-                <Section title="CARACTERÍSTICAS MIOLO" layoutType="two-fixed">
+                <Section title="CARACTERÍSTICAS MIOLO (definição papel)" layoutType="two-fixed">
                     <CustomSelect
                         label="Acabamento"
                         name="acabamento"
@@ -866,7 +873,16 @@ export default function NovaOS() {
                         placeholder="Selecione..." />
                     <FormInput label="Cores" name="cores_miolo" value={formData.cores_miolo} onChange={handleChange} type="numeric" />
                     <SubGrid layoutType="three">
-                        <FormInput label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} type="text" />
+                        {/* <FormInput label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} type="text" /> */}
+                        <CustomSelect
+                        label="Papel"
+                        name="papel_miolo"
+                        value={formData.papel_miolo}
+                        onChange={handleChange}
+                        options={PAPEL_OPTIONS}
+                        // required
+                        canCreate={true}
+                        placeholder="Selecione..." />
                         <FormInput label="Gramagem (g)" name="miolo_gramas" value={formData.miolo_gramas} onChange={handleChange} type="numeric" />
                         <FormInput label="Bobine (cm)" name="bobine_miolo" value={formData.bobine_miolo} onChange={handleChange} type="numeric" />
                     </SubGrid>
@@ -930,7 +946,16 @@ export default function NovaOS() {
                     <FormInput label="Lombada (mm)" name="lombada" value={formData.lombada} onChange={handleChange} type="numeric" step="0.01" />
                     <FormInput label="Cores" name="cores_capa" value={formData.cores_capa} onChange={handleChange} type="numeric" />
                     <SubGrid layoutType="three">
-                        <FormInput label="Papel" name="papel_capa" value={formData.papel_capa} onChange={handleChange} type="text" />
+                        {/* <FormInput label="Papel" name="papel_capa" value={formData.papel_capa} onChange={handleChange} type="text" /> */}
+                        <CustomSelect
+                        label="Papel"
+                        name="papel_capa"
+                        value={formData.papel_capa}
+                        onChange={handleChange}
+                        options={PAPEL_OPTIONS}
+                        // required
+                        canCreate={true}
+                        placeholder="Selecione..." />
                         <FormInput label="Gramagem (g)" name="capa_gramas" value={formData.capa_gramas} onChange={handleChange} type="numeric" />
                         <FormInput label="Bobine (cm)" name="bobine_capa" value={formData.bobine_capa} onChange={handleChange} type="numeric" />
                     </SubGrid>

@@ -46,6 +46,12 @@ function ListaOS() {
             if (response.ok) {
                 const data = await response.json();
                 setOrders(data); 
+                // Dentro da função fetchOrders, após o setOrders(data)
+if (response.ok) {
+    const data = await response.json();
+    console.log("DADOS QUE VIERAM DO BACKEND:", data[0]); // Isto mostra o primeiro registo na consola
+    setOrders(data); 
+}
             } else {
                 const errorData = await response.json();
                 setError(`Erro ao carregar OS: ${errorData.message || response.statusText}`);
@@ -134,7 +140,7 @@ function ListaOS() {
                         <th style={thStyles}>ID</th>
                         <th style={thStyles}>Nº OS (Ordem Serviço)</th>
                         <th style={thStyles}>Cliente</th>
-                        <th style={thStyles}>Status</th>
+                        <th style={thStyles}>Estado</th>
                         <th style={thStyles}>Criado Em</th>
                         <th style={thStyles}>Ação</th>
                     </tr>
