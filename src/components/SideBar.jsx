@@ -69,7 +69,7 @@ function SideBar() {
         </NavLink>
       </nav>
 
-      <button 
+      {/* <button 
         onClick={handleLogout} 
         style={{ 
           marginTop: '50px', 
@@ -83,7 +83,7 @@ function SideBar() {
         }}
       >
         Sair
-      </button>
+      </button> */}
     </div>
   );
 }

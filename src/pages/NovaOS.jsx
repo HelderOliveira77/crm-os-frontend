@@ -378,6 +378,7 @@ const CustomSelect = ({
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
+   
     }, [wrapperRef, canCreate, value]);
 
     const handleSelect = (option) => {
@@ -593,7 +594,7 @@ const FormRadioGroup_2 = ({ label, name, value, onChange, options, required = fa
 
 export default function NovaOS() {
 
-    const { token, user } = useAuth();
+    const { token, loading: authLoading } = useAuth();
 
     // Definimos userId, mas como não estamos a usar Firebase/Auth, usamos um UUID aleatório
     const [userId] = useState(crypto.randomUUID());
@@ -605,6 +606,7 @@ export default function NovaOS() {
         desc_trab: '',
         data_aber: new Date().toISOString().slice(0, 10),
         num_orc: '',
+        deposito_legal: '',
         num_o_s: 'A carregar...',
         estado: '',
         operador: dummyUser?.username || 'N/A',
@@ -653,6 +655,12 @@ export default function NovaOS() {
     };
     // Efeito para carregar o próximo número de OS
     useEffect(() => {
+
+
+
+
+        if (authLoading) return;
+        
         const getNextOSNumber = async () => {
             if (!shouldAttemptApi) {
                 console.error("Configuração de API Personalizada em falta. Atribuído número de OS manual (1000).");
@@ -699,7 +707,7 @@ export default function NovaOS() {
             }
         };
         getNextOSNumber();
-    }, [userId, shouldAttemptApi, formData.num_o_s]); // Adicionada dependência implícita de num_o_s para re-fetch após submissão
+    }, [authLoading, userId, shouldAttemptApi]); // <-- GARANTA QUE 'authLoading' ESTÁ AQUI // Adicionada dependência implícita de num_o_s para re-fetch após submissão
 
 
     // 1. DEFINIÇÃO DAS LISTAS DE CAMPOS (Dentro do componente)
@@ -806,6 +814,8 @@ export default function NovaOS() {
                         readOnly={false}
                         placeholder="Gerado automaticamente" />
                     <FormInput label="Nº Orçamento" name="num_orc" value={formData.num_orc} onChange={handleChange} type="numeric" />
+                    <FormInput label="Depósito Legal" name="deposito_legal" value={formData.deposito_legal} onChange={handleChange} type="text" />
+
                     <FormInput label="Cliente" name="cliente" value={formData.cliente} onChange={handleChange} required fullWidth type="text" />
                     <FormInput label="Descrição do Trabalho" name="desc_trab" value={formData.desc_trab} onChange={handleChange} isTextArea required type="text" fullWidth />
                     <SubGrid layoutType="three">

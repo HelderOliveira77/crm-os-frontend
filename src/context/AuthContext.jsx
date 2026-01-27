@@ -1,60 +1,40 @@
-// src/context/AuthContext.jsx
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-
-// 1. Criar o Contexto
 const AuthContext = createContext(null);
-
-// URL base da sua API (Sem o /auth no final, para ser a base)
 const API_URL = 'http://localhost:3000';
 
-// 2. Criar o Provedor do Contexto
-const AuthProvider = ({ children }) => {
-  // ATENÇÃO: Apenas inicializamos com o token e deixamos o useEffect tratar do resto.
+export const AuthProvider = ({ children }) => {
+  // 1. Inicializamos tentando ler 'authToken' (mantenha o nome consistente)
   const [token, setToken] = useState(localStorage.getItem('authToken'));
-  // user E isAuthenticated começas como null/false. O useEffect é quem manda.
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null); 
-  const [loading, setLoading] = useState(true); // Mantém-se true até o useEffect correr
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('authToken'));
+  const [user, setUser] = useState(localStorage.getItem('authUsername') ? { username: localStorage.getItem('authUsername') } : null);
+  const [loading, setLoading] = useState(true);
 
-  // Função de LOGOUT
-  const logout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('authUsername'); 
-    setToken(null);
-    setIsAuthenticated(false);
-    setUser(null);
-  };
-
-  // Efeito: LIDA COM A PERSISTÊNCIA NA RECARGA (Corre apenas uma vez na montagem)
+  
+  // 2. Sincronização robusta
   useEffect(() => {
     const storedToken = localStorage.getItem('authToken');
     const storedUsername = localStorage.getItem('authUsername');
     
     if (storedToken) {
+        setToken(storedToken);
         setIsAuthenticated(true);
-        // O token já está no estado, garantimos que o nome também está.
         if (storedUsername) {
             setUser({ username: storedUsername });
         }
     } else {
+        setToken(null);
         setIsAuthenticated(false);
         setUser(null);
     }
+    setLoading(false);
+  }, []); // Corre apenas uma vez ao montar o app
 
-    setLoading(false); // SÓ DESLIGAMOS O LOADING DEPOIS DE TODA A VERIFICAÇÃO.
-
-  }, [token]); // Só re-corre se o token mudar
-
-
-  // Função de LOGIN (Corrigida e limpa)
   const login = async (username, password) => {
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
 
@@ -62,16 +42,15 @@ const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const loggedInUsername = data.user ? data.user.username : username;
-        const loggedInRole = data.user ? data.user.role : 'Utilizador';
         
-        // Ações CRÍTICAS: Guardar no localStorage
+        // GUARDAR NO STORAGE (Essencial para o Refresh)
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('authUsername', loggedInUsername); 
 
-        // Atualizar o estado (isto despoleta o useEffect)
+        // ATUALIZAR ESTADO
         setToken(data.token);
-        setUser({ username: loggedInUsername, role: loggedInRole });
-        setIsAuthenticated(true); // Pode ser definido aqui para ser mais rápido
+        setUser({ username: loggedInUsername });
+        setIsAuthenticated(true);
 
         return { success: true };
       } else {
@@ -83,22 +62,18 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // Objeto de valor a ser fornecido
-  const value = {
-    token,
-    isAuthenticated,
-    user,
-    login,
-    logout,
-    loading,
+  const logout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('authUsername'); 
+    setToken(null);
+    setIsAuthenticated(false);
+    setUser(null);
   };
+
+  const value = { token, isAuthenticated, user, login, logout, loading };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// 3. Hook Personalizado para usar o Contexto
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
-
+export const useAuth = () => useContext(AuthContext);
 export default AuthProvider;

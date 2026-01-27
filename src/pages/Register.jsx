@@ -1,8 +1,10 @@
 // src/pages/Register.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const navigate = useNavigate(); // Hook para navegar programaticamente
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,7 +24,7 @@ function Register() {
       if (response.status === 201) {
         alert('Registo feito com sucesso! Pode fazer Login.');
         // Navegar para a página de Login, se existir
-        // navigate('/'); 
+        navigate('/'); 
       } else {
         const errorData = await response.json();
         alert(`Erro: ${errorData.message}`);
