@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 const API_URL = 'http://localhost:3000';
 
 function DashboardHome() {
-  const { token, loading: authLoading } = useAuth();
+  const { token, logout, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [ordensServico, setOrdensServico] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,6 +14,12 @@ function DashboardHome() {
   // ESTADOS PARA OS FILTROS
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('TODOS');
+
+// Função para lidar com o erro de sessão
+const handleSessionError = () => {
+  logout(); // Limpa token e user do localStorage e estado global
+  navigate('/'); // Redireciona para a página de login (ou '/' se for o seu caso)
+};
 
   useEffect(() => {
     const fetchOrdensServico = async () => {
@@ -36,6 +42,7 @@ function DashboardHome() {
 
         if (response.status === 401 || response.status === 403) {
           throw new Error("Sessão expirada ou sem permissão. Faça login novamente.");
+          // onClick={handleLogout} 
         }
 
         if (!response.ok) {
@@ -63,7 +70,13 @@ function DashboardHome() {
     const search = searchTerm.toLowerCase();
     const numOS = (os.num_o_s || os.numOS || '').toString().toLowerCase();
     const cliente = (os.cliente || '').toLowerCase();
-    const matchesSearch = numOS.includes(search) || cliente.includes(search);
+    // 2. TRATAMENTO DA DATA PARA PESQUISA
+    let dataFormatadaParaPesquisa = '';
+    if (os.data_aber) {
+      // Criamos uma versão da data em PT-PT (DD/MM/AAAA) para o filtro bater certo com o que se vê no ecrã
+      dataFormatadaParaPesquisa = new Date(os.data_aber).toLocaleDateString('pt-PT');
+    }
+    const matchesSearch = numOS.includes(search) || cliente.includes(search) || dataFormatadaParaPesquisa.includes(search);
 
     // 2. Filtro por Estado
     const matchesStatus = statusFilter === 'TODOS' || os.estado === statusFilter;
@@ -80,11 +93,25 @@ function DashboardHome() {
 
   if (loading) return <div style={{ padding: '20px' }}>A carregar Ordens de Serviço...</div>;
 
+  // CORREÇÃO NO BLOCO DE ERRO
   if (error) return (
-    <div style={{ padding: '20px', color: 'red' }}>
+    <div style={{ padding: '40px', textAlign: 'center', color: '#e74c3c' }}>
       <h3>Atenção</h3>
       <p>{error}</p>
-      <button onClick={() => navigate('/login')} style={{ padding: '10px', cursor: 'pointer' }}>Ir para Login</button>
+      <button 
+        onClick={handleSessionError} 
+        style={{ 
+          padding: '10px 20px', 
+          backgroundColor: '#3498db', 
+          color: 'white', 
+          border: 'none', 
+          borderRadius: '4px', 
+          cursor: 'pointer',
+          fontWeight: 'bold'
+        }}
+      >
+        Ir para Login
+      </button>
     </div>
   );
   
@@ -97,7 +124,7 @@ function DashboardHome() {
           {/* PESQUISA POR TEXTO */}
           <input 
             type="text" 
-            placeholder="Pesquisar por Nº OS ou Cliente..." 
+            placeholder="Pesquisar por Nº OS, Cliente ou Data..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={searchInputStyle}
@@ -132,9 +159,9 @@ function DashboardHome() {
               <th style={tableHeaderStyle}>Nº Ordem</th>
               <th style={tableHeaderStyle}>Cliente</th>
               <th style={tableHeaderStyle}>Descrição</th>
+              <th style={tableHeaderStyle}>Data Abertura</th>
               {/* CAMPOS MANTIDOS COMENTADOS PARA USO FUTURO */}
-              {/* <th style={tableHeaderStyle}>Data Abertura</th>
-              <th style={tableHeaderStyle}>Data Recepção</th>
+              {/*  <th style={tableHeaderStyle}>Data Recepção</th>
               <th style={tableHeaderStyle}>Orçamento</th>
               <th style={tableHeaderStyle}>Formato</th>
               <th style={tableHeaderStyle}>Cores Miolo</th>
@@ -142,8 +169,8 @@ function DashboardHome() {
               <th style={tableHeaderStyle}>N.º Páginas</th>
               <th style={tableHeaderStyle}>Lombada</th>
               <th style={tableHeaderStyle}>Observações Gerais</th> */}
-              <th style={tableHeaderStyle}>Impressão</th>
-              <th style={tableHeaderStyle}>Tiragem</th>
+              {/* <th style={tableHeaderStyle}>Impressão</th>
+              <th style={tableHeaderStyle}>Tiragem</th> */}
               <th style={tableHeaderStyle}>Operador</th>
               <th style={tableHeaderStyle}>Estado</th>
               <th style={tableHeaderStyle}>Ações</th>
@@ -155,7 +182,10 @@ function DashboardHome() {
                 <td style={tableCellStyle}>{os.num_o_s || os.numOS || 'N/A'}</td>
                 <td style={tableCellStyle}>{os.cliente || 'N/A'}</td>
                 <td style={tableCellStyle}>{os.desc_trab?.substring(0, 40)}...</td>
-                
+                <td style={tableCellStyle}>
+                    {os.data_aber ? new Date(os.data_aber).toLocaleDateString('pt-PT') : 'N/A'}
+                    </td>
+
                 {/* MAPEAMENTO DOS CAMPOS COMENTADOS */}
                 {/* <td style={tableCellStyle}>{os.data_aber}</td>
                 <td style={tableCellStyle}>{os.data_recep}</td>
@@ -167,8 +197,8 @@ function DashboardHome() {
                 <td style={tableCellStyle}>{os.lombada}</td>
                 <td style={tableCellStyle}>{os.observacoes_gerais}</td> */}
 
-                <td style={tableCellStyle}>{os.impressao || '-'}</td>
-                <td style={tableCellStyle}>{os.tiragem || '-'}</td>
+                {/* <td style={tableCellStyle}>{os.impressao || '-'}</td>
+                <td style={tableCellStyle}>{os.tiragem || '-'}</td> */}
                 <td style={tableCellStyle}>{os.operador || '-'}</td>
                 <td style={tableCellStyle}>
                   <span style={{ 

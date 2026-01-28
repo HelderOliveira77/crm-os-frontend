@@ -105,14 +105,14 @@ const styles = {
         backgroundColor: '#2ecc71',
         color: 'white',
         border: 'none',
-        borderRadius: '5px',
+        borderRadius: '4px',
         cursor: 'pointer',
-        fontSize: '1.1em',
+        fontSize: '1em',
         fontWeight: 'bold',
         transition: 'background-color 0.3s, box-shadow 0.3s',
         boxShadow: '0 4px #27ae60',
         width: '100%',
-        maxWidth: '400px',
+        maxWidth: '250px',
     },
     submitButtonDisabled: {
         backgroundColor: '#a8dadc',
@@ -120,16 +120,17 @@ const styles = {
         cursor: 'not-allowed',
     },
     cancelButton: {
-        padding: '10px',
+        padding: '12px',
         backgroundColor: '#e74c3c',
         color: 'white',
         border: 'none',
-        borderRadius: '5px',
+        borderRadius: '4px',
         cursor: 'pointer',
         transition: 'background-color 0.3s, box-shadow 0.3s',
         boxShadow: '0 4px #c0392b',
         width: '100%',
-        maxWidth: '400px',
+        maxWidth: '250px',
+        fontSize: '1em',
     },
     errorBox: {
         padding: '10px',
@@ -795,13 +796,46 @@ export default function NovaOS() {
     const maquinaPlaceholder = isMaquinaDisabled ? 'Selecione "Impressão" primeiro' : 'Selecione...';
     return (
         <div style={styles.container}>
-            {displayMessage}
-            {(osLoading && !isOsNumberReady && shouldAttemptApi) &&
-                <div style={styles.successBox}>A carregar o próximo número de Ordem de Serviço da API Personalizada...</div>
-            }
-            {/* <h1 style={{ color: '#2c3e50', fontSize: '2em', marginBottom: '30px', textAlign: 'center' }}>
-                Nova Ordem de Serviço
-            </h1> */}
+
+           {/* NOVO CABEÇALHO ALINHADO */}
+        <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            marginBottom: '25px',
+            backgroundColor: '#fff',
+            padding: '15px 20px',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+        }}>
+            <h2 style={{ color: '#2c3e50', margin: 0, fontSize: '1.6em' }}>
+                Criar Ordem de Serviço
+            </h2>
+
+            <button
+                type="button"
+                onClick={() => navigate(-1)}
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    backgroundColor: '#2c3e50', // Cinzento neutro
+                    color: 'white',
+                    border: 'none',
+                    padding: '10px 20px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '0.9em'
+                }}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#7f8c8d'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#2c3e50'}
+            >
+                ← Voltar
+            </button>
+        </div>
+
+
             <form onSubmit={handleSubmit} style={styles.form}>
                 {/* 1. INFORMAÇÃO ORDEM DE SERVIÇO */}
                 <Section title="INFORMAÇÃO BÁSICA" layoutType="two-fixed">

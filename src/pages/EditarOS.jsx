@@ -26,8 +26,8 @@ const styles = {
     input: { width: '100%', padding: '12px 10px', boxSizing: 'border-box', border: '1px solid #bdc3c7', borderRadius: '4px', backgroundColor: '#fff' },
     readOnlyInput: { width: '100%', padding: '12px 10px', boxSizing: 'border-box', border: '1px solid #bdc3c7', borderRadius: '4px', backgroundColor: '#ecf0f1', color: '#7f8c8d', fontWeight: 'bold' },
     datalistInput: { width: '100%', padding: '12px 10px', boxSizing: 'border-box', border: '1px solid #bdc3c7', borderRadius: '4px', backgroundColor: '#fff', fontWeight: '600', color: '#2c3e50' },
-    submitButton: { padding: '12px', backgroundColor: '#2ecc71', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontSize: '1.1em', fontWeight: 'bold', boxShadow: '0 4px #27ae60', width: '100%', maxWidth: '400px' },
-    cancelButton: { padding: '10px', backgroundColor: '#e74c3c', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', boxShadow: '0 4px #c0392b', width: '100%', maxWidth: '400px' }
+    submitButton: { padding: '12px', backgroundColor: '#2ecc71', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '1em', fontWeight: 'bold', boxShadow: '0 4px #27ae60', width: '100%', maxWidth: '250px' },
+    cancelButton: { padding: '12px', backgroundColor: '#e74c3c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '1em', boxShadow: '0 4px #c0392b', width: '100%', maxWidth: '250px' }
 };
 
 // --- COMPONENTES AUXILIARES (REUTILIZADOS) ---
@@ -169,10 +169,48 @@ export default function EditarOS() {
     return (
         <div style={styles.container}>
 
-{/* Título Dinâmico adicionado aqui */}
-<h2 style={{ color: '#2c3e50', marginBottom: '20px' }}>
+
+
+<div style={{ 
+    display: 'flex', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginBottom: '25px',
+    backgroundColor: '#fff',
+    padding: '15px 20px',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+}}>
+    <h2 style={{ color: '#2c3e50', margin: 0, fontSize: '1.6em' }}>
                 Editar Ordem de Serviço {formData.num_o_s ? `#${formData.num_o_s}` : ''}
             </h2>
+
+
+    <div style={{ display: 'flex', gap: '12px' }}>
+        <button
+            onClick={() => navigate(-1)}
+            style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                backgroundColor: '#2c3e50',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '0.9em',
+                transition: 'background-color 0.2s'
+            }}
+            onMouseOver={(e) => e.target.style.backgroundColor = '#7f8c8d'}
+            onMouseOut={(e) => e.target.style.backgroundColor = '#2c3e50'}
+        >
+            ← Voltar
+        </button>
+
+    </div>
+</div>
 
             <form onSubmit={handleSubmit} style={styles.form}>
                 

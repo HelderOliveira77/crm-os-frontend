@@ -41,7 +41,7 @@ const headerStyle = {
         <button 
           onClick={handleLogout} 
           style={{ 
-            backgroundColor: '#e74c3c', 
+            backgroundColor: '#2c3e50', 
             color: 'white', 
             border: 'none', 
             padding: '8px 15px', 

@@ -55,7 +55,12 @@ function SideBar() {
 
 
       <h2> GESTÃO <br></br> ORDENS SERVIÇO </h2>
-      <hr style={{ borderColor: '#34495e', marginBottom: '20px' }} />
+      <hr style={{ 
+            border: 'none',             // Remove a borda padrão para não haver conflito
+            borderTop: '1.5px dashed white', // Define a linha superior como tracejada (1.5px de espessura)
+            marginBottom: '20px',
+            opacity: 0.5                // Opcional: para não ficar um branco tão "agressivo"
+            }} />
 
       <nav>
         {/* O link para o index será a lista de TODAS as OS */}
