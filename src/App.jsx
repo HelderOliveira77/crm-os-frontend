@@ -13,6 +13,7 @@ import EditarOS from './pages/EditarOS';
 import VisualizarOS from './pages/VisualizarOS';
 import Header from './components/Header';
 import { Outlet } from 'react-router-dom';
+import UsersManagement from './pages/UsersManagement';
 
 
 // function DashboardLayout() {
@@ -59,6 +60,8 @@ function App() {
             
             {/* 2. Sub-rota: /dashboard/os/nova (Formulário Nova OS) */}
             <Route path="os/nova" element={<NovaOS />} />
+
+            <Route path="users" element={<UsersManagement />} /> {/* Nova Rota */}
 
             <Route path="os/visualizar/:id" element={<VisualizarOS />} />
 

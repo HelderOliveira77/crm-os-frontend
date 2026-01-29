@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; 
+import { useAuth } from '../context/AuthContext';
 
 import Logo from '../assets/logos multiponto Branco.png'; // <-- AJUSTAR ESTE CAMINHO SE NECESSÁRIO
 
@@ -11,7 +11,7 @@ import Logo from '../assets/logos multiponto Branco.png'; // <-- AJUSTAR ESTE CA
 const sideBarStyles = {
   width: '350px',
   height: 'auto',
-  backgroundColor: '#2c3e50', 
+  backgroundColor: '#2c3e50',
   padding: '20px 30px',
   color: 'white',
   boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
@@ -25,7 +25,7 @@ const navLinkStyle = ({ isActive }) => ({
   display: 'block',
   borderLeft: isActive ? '3px solid #f39c12' : 'none',
   paddingLeft: isActive ? '17px' : '20px',
-   fontSize: '1.6rem'
+  fontSize: '1.6rem'
 });
 
 const logoStyles = {
@@ -35,43 +35,54 @@ const logoStyles = {
 };
 
 function SideBar() {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout(); 
-    navigate('/'); 
+    logout();
+    navigate('/');
   };
 
   return (
     <div style={sideBarStyles}>
 
-{/* 3. ADICIONAR A TAG <img> */}
-<img 
-        src={Logo} 
-        alt="Logótipo da Empresa" 
-        style={logoStyles} 
+      {/* 3. ADICIONAR A TAG <img> */}
+      <img
+        src={Logo}
+        alt="Logótipo da Empresa"
+        style={logoStyles}
       />
 
 
       <h2> GESTÃO <br></br> ORDENS SERVIÇO </h2>
-      <hr style={{ 
-            border: 'none',             // Remove a borda padrão para não haver conflito
-            borderTop: '1.5px dashed white', // Define a linha superior como tracejada (1.5px de espessura)
-            marginBottom: '20px',
-            opacity: 0.5                // Opcional: para não ficar um branco tão "agressivo"
-            }} />
+      <hr style={{
+        border: 'none',             // Remove a borda padrão para não haver conflito
+        borderTop: '1.5px dashed white', // Define a linha superior como tracejada (1.5px de espessura)
+        marginBottom: '20px',
+        opacity: 0.5                // Opcional: para não ficar um branco tão "agressivo"
+      }} />
 
       <nav>
         {/* O link para o index será a lista de TODAS as OS */}
         <NavLink to="/dashboard" end style={navLinkStyle}>
           Ordens Serviço
         </NavLink>
-        
+
         {/* [NOVO] Este link levará ao formulário de criação de nova OS */}
-        <NavLink to="os/nova" style={navLinkStyle}>
-          Nova Ordem Serviço
-        </NavLink>
+        {/* ALTERAÇÃO: Este link só aparece se NÃO for Viewer (ou seja, Admin ou Technician) */}
+        {(user?.role === 'Admin' || user?.role === 'Technician') && (
+          <NavLink to="os/nova" style={navLinkStyle}>
+            Nova Ordem Serviço
+          </NavLink>
+        )}
+
+        {/* NOVO: Link visível APENAS para Admin */}
+        {user?.role === 'Admin' && (
+          <NavLink to="users" style={navLinkStyle}>
+            Gestão Utilizadores
+          </NavLink>
+        )}
+
       </nav>
 
       {/* <button 

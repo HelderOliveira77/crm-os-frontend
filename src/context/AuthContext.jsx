@@ -11,7 +11,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.getItem('authUsername') 
       ? { 
           username: localStorage.getItem('authUsername'),
-          email: localStorage.getItem('authEmail') 
+          email: localStorage.getItem('authEmail'),
+          role: localStorage.getItem('authRole') 
         } 
       : null
   );
@@ -23,12 +24,13 @@ export const AuthProvider = ({ children }) => {
     const storedToken = localStorage.getItem('authToken');
     const storedUsername = localStorage.getItem('authUsername');
     const storedEmail = localStorage.getItem('authEmail');
+    const storedRole = localStorage.getItem('authRole');
     
     if (storedToken) {
         setToken(storedToken);
         setIsAuthenticated(true);
         if (storedUsername) {
-            setUser({ username: storedUsername, email: storedEmail });
+            setUser({ username: storedUsername, email: storedEmail, role: storedRole });
         }
     } else {
         setToken(null);
@@ -51,15 +53,17 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         const loggedInUsername = data.user?.username || data.username || username;
         const loggedInEmail = data.user?.email || '';
+        const loggedInRole = data.user?.role || 'Viewer'; // Pega a role da API
         
         // GUARDAR NO STORAGE (Essencial para o Refresh)
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('authUsername', loggedInUsername); 
         localStorage.setItem('authEmail', loggedInEmail); // Guardar no Storage
+        localStorage.setItem('authRole', loggedInRole); // NOVO
 
         // ATUALIZAR ESTADO
         setToken(data.token);
-        setUser({ username: loggedInUsername, email: loggedInEmail });
+        setUser({ username: loggedInUsername, email: loggedInEmail, role: loggedInRole });
         setIsAuthenticated(true);
 
         return { success: true };
@@ -76,6 +80,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('authUsername'); 
     localStorage.removeItem('authEmail'); // Remover no logout
+    localStorage.removeItem('authRole'); // Remover no logout
     setToken(null);
     setIsAuthenticated(false);
     setUser(null);

@@ -127,6 +127,23 @@ export default function EditarOS() {
     const camposEstritamenteNumericos = ['num_orc', 'num_pag', 'tiragem', 'cores_miolo', 'miolo_gramas', 'cores_capa', 'capa_gramas', 'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas'];
     const camposDecimais = ['lombada', 'tempo_operador'];
 
+
+    if (user?.role === 'Viewer') {
+        return (
+            <div style={{ padding: '40px', textAlign: 'center' }}>
+                <h2 style={{ color: '#e74c3c' }}>Acesso Restrito</h2>
+                <p>O seu perfil de visualizador não permite criar novas Ordens de Serviço.</p>
+                <button 
+                    onClick={() => navigate('/dashboard')}
+                    style={{ padding: '10px 20px', cursor: 'pointer', backgroundColor: '#3498db', color: '#fff', border: 'none', borderRadius: '4px' }}
+                >
+                    Voltar ao Dashboard
+                </button>
+            </div>
+        );
+    }
+
+
     useEffect(() => {
         const fetchOS = async () => {
             try {

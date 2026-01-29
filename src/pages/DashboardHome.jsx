@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 const API_URL = 'http://localhost:3000';
 
 function DashboardHome() {
-  const { token, logout, loading: authLoading } = useAuth();
+  const { token, user, logout, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [ordensServico, setOrdensServico] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -142,9 +142,12 @@ const handleSessionError = () => {
             <option value="FECHADO">Fechadas</option>
           </select>
 
-          <Link to="/dashboard/os/nova" style={{ ...btnActionStyle, backgroundColor: '#2ecc71', padding: '10px 20px', marginRight: 0 }}>
-            + Nova OS
-          </Link>
+         {/* ALTERAÇÃO: Botão Nova OS visível apenas para Admin e Technician */}
+         {(user?.role === 'Admin' || user?.role === 'Technician') && (
+            <Link to="/dashboard/os/nova" style={{ ...btnActionStyle, backgroundColor: '#2ecc71', padding: '10px 20px', marginRight: 0 }}>
+              + Nova OS
+            </Link>
+          )}
         </div>
       </div>
       
@@ -211,7 +214,10 @@ const handleSessionError = () => {
                 </td>
                 <td style={{ ...tableCellStyle, whiteSpace: 'nowrap' }}>
                   <Link to={`/dashboard/os/visualizar/${os.id}`} style={{ ...btnActionStyle, backgroundColor: '#3498db' }}>Ver</Link>
-                  <Link to={`/dashboard/os/editar/${os.id}`} style={{ ...btnActionStyle, backgroundColor: '#f39c12' }}>Editar</Link>
+                 {/* ALTERAÇÃO: Botão Editar visível apenas para Admin e Technician */}
+                 {(user?.role === 'Admin' || user?.role === 'Technician') && (
+                    <Link to={`/dashboard/os/editar/${os.id}`} style={{ ...btnActionStyle, backgroundColor: '#f39c12' }}>Editar</Link>
+                  )}
                 </td>
               </tr>
             ))}

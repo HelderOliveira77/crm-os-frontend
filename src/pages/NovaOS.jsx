@@ -26,12 +26,12 @@ const MAQUINA_MAPPING = {
     'N/A': [], // N/A não tem máquina associada
     'DEFAULT': []
 };
-const ACABAMENTO_OPTIONS = [ 'AGRAFADO', 'COLADO LOMBADA', 'CORTES RETOS', 'COSIDO', 'SEM ACABAMENTO', 'SERROTADO'];
-const PAPEL_OPTIONS = [ 'AUTOCOLANTES', 'CARTE LUMINA', 'COUCHE MATE', 'COUCHE BRILHO', 'COUCHE SILK', 'CREATOR STAR', 'CARTOLINA FOLDING', 'CARTOLINA (Verso cinza)', 
-'ENVIPRESS', 'EAGLE CREAM', 'HOLMEN VIEW', 'IOR', 'LWC', 'NEWSPRESS', 'NEWSPRINT', 'OFFSET', 'OPALE TELADO', 'PAPEL RECICLADO',
+const ACABAMENTO_OPTIONS = ['AGRAFADO', 'COLADO LOMBADA', 'CORTES RETOS', 'COSIDO', 'SEM ACABAMENTO', 'SERROTADO'];
+const PAPEL_OPTIONS = ['AUTOCOLANTES', 'CARTE LUMINA', 'COUCHE MATE', 'COUCHE BRILHO', 'COUCHE SILK', 'CREATOR STAR', 'CARTOLINA FOLDING', 'CARTOLINA (Verso cinza)',
+    'ENVIPRESS', 'EAGLE CREAM', 'HOLMEN VIEW', 'IOR', 'LWC', 'NEWSPRESS', 'NEWSPRINT', 'OFFSET', 'OPALE TELADO', 'PAPEL RECICLADO',
     'UNO FINESS GLOSS', 'UNO PRIME GLOSS', 'UNO BRIGHT SATIN', 'UNO PRIME SATIN', 'UNO WEB WHITE GLOSS', 'UNO WEB WHITE BULKY', 'UPM ULTRA GLOSS', 'UPM COTE ', 'UPM EXO 72 C',
-     'UPM ULTRA H','UPM ULTRA SILK', 'UPM SMART', 'UPM BRIGHT 68 C' ,'R4 GLOSS', 'R4 CHORUS GLOSS',  
-    'RESPECTA GLOSS', 'RIVES DESIGN',  'TUFFCOTE' ];
+    'UPM ULTRA H', 'UPM ULTRA SILK', 'UPM SMART', 'UPM BRIGHT 68 C', 'R4 GLOSS', 'R4 CHORUS GLOSS',
+    'RESPECTA GLOSS', 'RIVES DESIGN', 'TUFFCOTE'];
 
 
 const INITIAL_OS_NUMBER = 1000;
@@ -327,7 +327,7 @@ const SubGrid_2 = ({ layoutType = 'two-fixed', children, title }) => {
                     // opcional: limitar a largura máxima da caixa inteira
                     // maxWidth: '1200px',
                     // ALTERAÇÃO CRÍTICA: Remove a centralização e alinha à esquerda
-                    margin: '0', 
+                    margin: '0',
                 }}
             >
                 {children}
@@ -379,7 +379,7 @@ const CustomSelect = ({
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-   
+
     }, [wrapperRef, canCreate, value]);
 
     const handleSelect = (option) => {
@@ -602,6 +602,24 @@ export default function NovaOS() {
 
     const navigate = useNavigate(); // Instanciação correta
 
+
+    // --- INSERIR AQUI (Antes dos estados e useEffects) ---
+    if (user?.role === 'Viewer') {
+        return (
+            <div style={{ padding: '40px', textAlign: 'center' }}>
+                <h2 style={{ color: '#e74c3c' }}>Acesso Restrito</h2>
+                <p>O seu perfil de visualizador não permite criar novas Ordens de Serviço.</p>
+                <button 
+                    onClick={() => navigate('/dashboard')}
+                    style={{ padding: '10px 20px', cursor: 'pointer', backgroundColor: '#3498db', color: '#fff', border: 'none', borderRadius: '4px' }}
+                >
+                    Voltar ao Dashboard
+                </button>
+            </div>
+        );
+    }
+
+
     const initialFormData = {
         cliente: '',
         desc_trab: '',
@@ -661,7 +679,7 @@ export default function NovaOS() {
 
 
         if (authLoading) return;
-        
+
         const getNextOSNumber = async () => {
             if (!shouldAttemptApi) {
                 console.error("Configuração de API Personalizada em falta. Atribuído número de OS manual (1000).");
@@ -714,7 +732,7 @@ export default function NovaOS() {
     // 1. DEFINIÇÃO DAS LISTAS DE CAMPOS (Dentro do componente)
     const camposEstritamenteNumericos = [
         'num_orc', 'num_pag', 'tiragem', 'cores_miolo', 'miolo_gramas',
-        'cores_capa', 'capa_gramas', 
+        'cores_capa', 'capa_gramas',
         'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas',
     ];
     const camposDecimais = ['lombada', 'tempo_operador'];
@@ -764,12 +782,12 @@ export default function NovaOS() {
                     'Authorization': `Bearer ${token}`,
                 },
                 // ATENÇÃO: Enviar dataToSend e não formData
-                body: JSON.stringify(dataToSend), 
+                body: JSON.stringify(dataToSend),
             });
 
             if (response.ok) {
                 alert('Ordem de Serviço criada com sucesso!');
-                navigate('/dashboard'); 
+                navigate('/dashboard');
             } else {
                 const errorData = await response.json();
                 alert(`Erro ao criar: ${errorData.message || 'Verifique os dados.'}`);
@@ -781,7 +799,7 @@ export default function NovaOS() {
             setLoading(false);
         }
     };
-    
+
     const isOsNumberReady = formData.num_o_s !== '' && formData.num_o_s !== 'A carregar...';
     // Componente de mensagem
     const displayMessage = message ? (
@@ -797,43 +815,43 @@ export default function NovaOS() {
     return (
         <div style={styles.container}>
 
-           {/* NOVO CABEÇALHO ALINHADO */}
-        <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
-            marginBottom: '25px',
-            backgroundColor: '#fff',
-            padding: '15px 20px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-        }}>
-            <h2 style={{ color: '#2c3e50', margin: 0, fontSize: '1.6em' }}>
-                Criar Ordem de Serviço
-            </h2>
+            {/* NOVO CABEÇALHO ALINHADO */}
+            <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '25px',
+                backgroundColor: '#fff',
+                padding: '15px 20px',
+                borderRadius: '8px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+            }}>
+                <h2 style={{ color: '#2c3e50', margin: 0, fontSize: '1.6em' }}>
+                    Criar Ordem de Serviço
+                </h2>
 
-            <button
-                type="button"
-                onClick={() => navigate(-1)}
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    backgroundColor: '#2c3e50', // Cinzento neutro
-                    color: 'white',
-                    border: 'none',
-                    padding: '10px 20px',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontWeight: 'bold',
-                    fontSize: '0.9em'
-                }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#7f8c8d'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#2c3e50'}
-            >
-                ← Voltar
-            </button>
-        </div>
+                <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        backgroundColor: '#2c3e50', // Cinzento neutro
+                        color: 'white',
+                        border: 'none',
+                        padding: '10px 20px',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        fontSize: '0.9em'
+                    }}
+                    onMouseOver={(e) => e.target.style.backgroundColor = '#7f8c8d'}
+                    onMouseOut={(e) => e.target.style.backgroundColor = '#2c3e50'}
+                >
+                    ← Voltar
+                </button>
+            </div>
 
 
             <form onSubmit={handleSubmit} style={styles.form}>
@@ -888,7 +906,7 @@ export default function NovaOS() {
                         value={formData.impressao}
                         onChange={handleChange}
                         options={IMPRESSAO_OPTIONS}
-                        required
+                        // required
                         canCreate={true}
                         placeholder="Selecione..." />
                     {/* CAMPO MÁQUINA (DINÂMICO) */}
@@ -919,14 +937,14 @@ export default function NovaOS() {
                     <SubGrid layoutType="three">
                         {/* <FormInput label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} type="text" /> */}
                         <CustomSelect
-                        label="Papel"
-                        name="papel_miolo"
-                        value={formData.papel_miolo}
-                        onChange={handleChange}
-                        options={PAPEL_OPTIONS}
-                        // required
-                        canCreate={true}
-                        placeholder="Selecione..." />
+                            label="Papel"
+                            name="papel_miolo"
+                            value={formData.papel_miolo}
+                            onChange={handleChange}
+                            options={PAPEL_OPTIONS}
+                            // required
+                            canCreate={true}
+                            placeholder="Selecione..." />
                         <FormInput label="Gramagem (g)" name="miolo_gramas" value={formData.miolo_gramas} onChange={handleChange} type="numeric" />
                         <FormInput label="Bobine (cm)" name="bobine_miolo" value={formData.bobine_miolo} onChange={handleChange} type="numeric" />
                     </SubGrid>
@@ -934,7 +952,7 @@ export default function NovaOS() {
                     <SubGrid_2 title="Opções de Verniz">
                         {/* <-- Caixa que envolve os grupos --> */}
                         <div style={{
-                            border: '1px solid #d1d5db', 
+                            border: '1px solid #d1d5db',
                             borderRadius: '6px',
                             padding: '1rem',                // 16 px → 1rem, mantém consistência
                             backgroundColor: '#fff',
@@ -992,21 +1010,21 @@ export default function NovaOS() {
                     <SubGrid layoutType="three">
                         {/* <FormInput label="Papel" name="papel_capa" value={formData.papel_capa} onChange={handleChange} type="text" /> */}
                         <CustomSelect
-                        label="Papel"
-                        name="papel_capa"
-                        value={formData.papel_capa}
-                        onChange={handleChange}
-                        options={PAPEL_OPTIONS}
-                        // required
-                        canCreate={true}
-                        placeholder="Selecione..." />
+                            label="Papel"
+                            name="papel_capa"
+                            value={formData.papel_capa}
+                            onChange={handleChange}
+                            options={PAPEL_OPTIONS}
+                            // required
+                            canCreate={true}
+                            placeholder="Selecione..." />
                         <FormInput label="Gramagem (g)" name="capa_gramas" value={formData.capa_gramas} onChange={handleChange} type="numeric" />
                         <FormInput label="Bobine (cm)" name="bobine_capa" value={formData.bobine_capa} onChange={handleChange} type="numeric" />
                     </SubGrid>
                     <SubGrid_2 title="Opções de Verniz">
                         {/* <-- Caixa que envolve os grupos --> */}
                         <div style={{
-                            border: '1px solid #d1d5db', 
+                            border: '1px solid #d1d5db',
                             borderRadius: '6px',
                             padding: '1rem',                // 16 px → 1rem, mantém consistência
                             backgroundColor: '#fff',
@@ -1063,7 +1081,7 @@ export default function NovaOS() {
                                     options={['Frente', 'Verso']}
                                     spacing={20}
                                 />
-                            </div>                            
+                            </div>
                         </div>
                     </SubGrid_2>
 
