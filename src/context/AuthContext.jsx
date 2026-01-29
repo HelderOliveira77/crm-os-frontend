@@ -7,7 +7,14 @@ export const AuthProvider = ({ children }) => {
   // 1. Inicializamos tentando ler 'authToken' (mantenha o nome consistente)
   const [token, setToken] = useState(localStorage.getItem('authToken'));
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('authToken'));
-  const [user, setUser] = useState(localStorage.getItem('authUsername') ? { username: localStorage.getItem('authUsername') } : null);
+  const [user, setUser] = useState(
+    localStorage.getItem('authUsername') 
+      ? { 
+          username: localStorage.getItem('authUsername'),
+          email: localStorage.getItem('authEmail') 
+        } 
+      : null
+  );
   const [loading, setLoading] = useState(true);
 
   
@@ -15,12 +22,13 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedToken = localStorage.getItem('authToken');
     const storedUsername = localStorage.getItem('authUsername');
+    const storedEmail = localStorage.getItem('authEmail');
     
     if (storedToken) {
         setToken(storedToken);
         setIsAuthenticated(true);
         if (storedUsername) {
-            setUser({ username: storedUsername });
+            setUser({ username: storedUsername, email: storedEmail });
         }
     } else {
         setToken(null);
@@ -41,15 +49,17 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (response.ok) {
-        const loggedInUsername = data.user ? data.user.username : username;
+        const loggedInUsername = data.user?.username || data.username || username;
+        const loggedInEmail = data.user?.email || '';
         
         // GUARDAR NO STORAGE (Essencial para o Refresh)
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('authUsername', loggedInUsername); 
+        localStorage.setItem('authEmail', loggedInEmail); // Guardar no Storage
 
         // ATUALIZAR ESTADO
         setToken(data.token);
-        setUser({ username: loggedInUsername });
+        setUser({ username: loggedInUsername, email: loggedInEmail });
         setIsAuthenticated(true);
 
         return { success: true };
@@ -65,6 +75,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('authUsername'); 
+    localStorage.removeItem('authEmail'); // Remover no logout
     setToken(null);
     setIsAuthenticated(false);
     setUser(null);

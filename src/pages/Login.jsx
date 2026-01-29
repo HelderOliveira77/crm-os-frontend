@@ -111,17 +111,17 @@ function Login() {
   return (
     <div style={styles.wrapper}>
       <div style={styles.loginCard}>
-        <span style={styles.logo}>GESTÃO OS</span>
+        <span style={styles.logo}>GESTÃO ORDENS SERVIÇO</span>
         <p style={styles.subtitle}>Plataforma de Ordens de Serviço</p>
         
         <form onSubmit={handleSubmit}>
           <div style={styles.inputGroup}>
-            <label style={styles.label}>Nome de Utilizador</label>
+            <label style={styles.label}>Utilizador ou Email</label>
             <input 
               type="text" 
               name="username" 
               style={styles.input}
-              placeholder="Introduza o seu nome de utilizador" 
+              placeholder="Nome ou Email" 
               value={formData.username}
               onChange={handleChange} 
               required 

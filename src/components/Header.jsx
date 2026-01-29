@@ -37,7 +37,13 @@ const headerStyle = {
       </Link>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '20px', color: 'black' }}>
-        {user && <span>Olá, <strong>{user.username}</strong></span>}
+      {user && (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', lineHeight: '1.2' }}>
+      <span style={{ fontSize: '0.95em', fontWeight: 'bold' }}>Olá, {user.username}</span>
+      <span style={{ fontSize: '0.8em', color: '#7f8c8d' }}>{user.email}</span>
+    </div>
+  )}
+        
         <button 
           onClick={handleLogout} 
           style={{ 
