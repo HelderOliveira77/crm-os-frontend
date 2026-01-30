@@ -594,16 +594,16 @@ const FormRadioGroup_2 = ({ label, name, value, onChange, options, required = fa
 
 
 export default function NovaOS() {
-
-    const { token, loading: authLoading } = useAuth();
-
     // Definimos userId, mas como não estamos a usar Firebase/Auth, usamos um UUID aleatório
     const [userId] = useState(crypto.randomUUID());
 
     const navigate = useNavigate(); // Instanciação correta
 
+    const { token, user, loading: authLoading } = useAuth();
+
 
     // --- INSERIR AQUI (Antes dos estados e useEffects) ---
+    // BLOQUEIO DE SEGURANÇA
     if (user?.role === 'Viewer') {
         return (
             <div style={{ padding: '40px', textAlign: 'center' }}>
@@ -618,7 +618,6 @@ export default function NovaOS() {
             </div>
         );
     }
-
 
     const initialFormData = {
         cliente: '',

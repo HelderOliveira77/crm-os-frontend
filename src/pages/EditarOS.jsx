@@ -119,7 +119,7 @@ const SubGrid = ({ children, layoutType = 'three' }) => (
 export default function EditarOS() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { token } = useAuth();
+    const { token, user } = useAuth();
     const [formData, setFormData] = useState(null);
     const [loading, setLoading] = useState(false);
 
