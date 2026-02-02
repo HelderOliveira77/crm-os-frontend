@@ -26,7 +26,7 @@ const MAQUINA_MAPPING = {
     'N/A': [], // N/A não tem máquina associada
     'DEFAULT': []
 };
-const ACABAMENTO_OPTIONS = ['AGRAFADO', 'COLADO LOMBADA', 'CORTES RETOS', 'COSIDO', 'SEM ACABAMENTO', 'SERROTADO'];
+const ACABAMENTO_OPTIONS = ['AGRAFADO','APARADO', 'COLADO LOMBADA', 'CORTES RETOS', 'COSIDO', 'SEM ACABAMENTO', 'SERROTADO',];
 const PAPEL_OPTIONS = ['AUTOCOLANTES', 'CARTE LUMINA', 'COUCHE MATE', 'COUCHE BRILHO', 'COUCHE SILK', 'CREATOR STAR', 'CARTOLINA FOLDING', 'CARTOLINA (Verso cinza)',
     'ENVIPRESS', 'EAGLE CREAM', 'HOLMEN VIEW', 'IOR', 'LWC', 'NEWSPRESS', 'NEWSPRINT', 'OFFSET', 'OPALE TELADO', 'PAPEL RECICLADO',
     'UNO FINESS GLOSS', 'UNO PRIME GLOSS', 'UNO BRIGHT SATIN', 'UNO PRIME SATIN', 'UNO WEB WHITE GLOSS', 'UNO WEB WHITE BULKY', 'UPM ULTRA GLOSS', 'UPM COTE ', 'UPM EXO 72 C',
@@ -636,6 +636,7 @@ export default function NovaOS() {
         tiragem: '',
         maquina: '',
         impressao: '',
+        lineatura: '',
         cores_miolo: '',
         papel_miolo: '',
         miolo_gramas: '',
@@ -643,7 +644,7 @@ export default function NovaOS() {
         verniz_miolo: '',
         verniz_miolo_brilho_mate: '',
         verniz_miolo_geral_reservado: '',
-        acabamento: '',
+        tipo_acabamento_miolo: '',
         observacoes_miolo: '',
         cores_capa: '',
         papel_capa: '',
@@ -732,7 +733,7 @@ export default function NovaOS() {
     const camposEstritamenteNumericos = [
         'num_orc', 'num_pag', 'tiragem', 'cores_miolo', 'miolo_gramas',
         'cores_capa', 'capa_gramas',
-        'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas',
+        'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas', 'lineatura'
     ];
     const camposDecimais = ['lombada', 'tempo_operador'];
 
@@ -919,14 +920,15 @@ export default function NovaOS() {
                         canCreate={true}
                         placeholder={maquinaPlaceholder}
                         isDisabled={isMaquinaDisabled} />
+                   <FormInput label="Lineatura" name="lineatura" value={formData.lineatura} onChange={handleChange} type="numeric" />
                     <FormInput label="Observações Gerais" name="observacoes_gerais" value={formData.observacoes_gerais} onChange={handleChange} isTextArea fullWidth />
                 </Section>
                 {/* 3. CARACTERÍSTICAS MIOLO */}
                 <Section title="CARACTERÍSTICAS MIOLO (definição papel)" layoutType="two-fixed">
                     <CustomSelect
                         label="Acabamento"
-                        name="acabamento"
-                        value={formData.acabamento}
+                        name="tipo_acabamento_miolo"
+                        value={formData.tipo_acabamento_miolo}
                         onChange={handleChange}
                         options={ACABAMENTO_OPTIONS}
                         required

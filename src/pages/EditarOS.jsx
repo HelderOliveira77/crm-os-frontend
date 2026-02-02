@@ -13,7 +13,7 @@ const MAQUINA_MAPPING = {
     'N/A': [],
     'DEFAULT': []
 };
-const ACABAMENTO_OPTIONS = ['AGRAFADO', 'COLADO LOMBADA', 'CORTES RETOS', 'COSIDO', 'SEM ACABAMENTO', 'SERROTADO'];
+const ACABAMENTO_OPTIONS = ['AGRAFADO', 'APARADO', 'COLADO LOMBADA', 'CORTES RETOS', 'COSIDO', 'SEM ACABAMENTO', 'SERROTADO'];
 const PAPEL_OPTIONS = ['AUTOCOLANTES', 'CARTE LUMINA', 'COUCHE MATE', 'COUCHE BRILHO', 'COUCHE SILK', 'CREATOR STAR', 'CARTOLINA FOLDING', 'CARTOLINA (Verso cinza)', 'ENVIPRESS', 'EAGLE CREAM', 'HOLMEN VIEW', 'IOR', 'LWC', 'NEWSPRESS', 'NEWSPRINT', 'OFFSET', 'OPALE TELADO', 'PAPEL RECICLADO', 'UNO FINESS GLOSS', 'UNO PRIME GLOSS', 'UNO BRIGHT SATIN', 'UNO PRIME SATIN', 'UNO WEB WHITE GLOSS', 'UNO WEB WHITE BULKY', 'UPM ULTRA GLOSS', 'UPM COTE ', 'UPM EXO 72 C', 'UPM ULTRA H', 'UPM ULTRA SILK', 'UPM SMART', 'UPM BRIGHT 68 C', 'R4 GLOSS', 'R4 CHORUS GLOSS', 'RESPECTA GLOSS', 'RIVES DESIGN', 'TUFFCOTE'];
 
 // --- ESTILOS (IGUAIS AO NovaOS.jsx) ---
@@ -250,13 +250,16 @@ export default function EditarOS() {
                         <FormInput label="Nº Páginas" name="num_pag" value={formData.num_pag} onChange={handleChange} />
                         <FormInput label="Tiragem" name="tiragem" value={formData.tiragem} onChange={handleChange} />
                     </SubGrid>
+                    <SubGrid>
                     <CustomSelect label="Impressão" name="impressao" value={formData.impressao} onChange={handleChange} options={IMPRESSAO_OPTIONS} />
                     <CustomSelect label="Máquina" name="maquina" value={formData.maquina} onChange={handleChange} options={MAQUINA_MAPPING[formData.impressao] || []} isDisabled={!formData.impressao} />
+                    <FormInput label="Lineatura" name="lineatura" value={formData.lineatura} onChange={handleChange} />
+                    </SubGrid>
                     <FormInput label="Observações Gerais" name="observacoes_gerais" value={formData.observacoes_gerais} onChange={handleChange} isTextArea fullWidth />
                 </Section>
 
                 <Section title="CARACTERÍSTICAS MIOLO (definição papel)">
-                    <CustomSelect label="Acabamento" name="acabamento" value={formData.acabamento} onChange={handleChange} options={ACABAMENTO_OPTIONS} />
+                    <CustomSelect label="Acabamento" name="tipo_acabamento_miolo" value={formData.tipo_acabamento_miolo} onChange={handleChange} options={ACABAMENTO_OPTIONS} />
                     <FormInput label="Cores" name="cores_miolo" value={formData.cores_miolo} onChange={handleChange} />
                     <SubGrid>
                         <CustomSelect label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} options={PAPEL_OPTIONS} />
