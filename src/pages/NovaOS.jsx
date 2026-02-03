@@ -749,7 +749,7 @@ export default function NovaOS() {
         let newValue = value;
 
         if (camposEstritamenteNumericos.includes(name)) {
-            newValue = value.replace(/[^0-9]/g, '');
+            newValue = value === '' ? 0 : parseInt(value.replace(/[^0-9]/g, ''), 10);
         } else if (camposDecimais.includes(name)) {
             newValue = value.replace(/[^0-9.]/g, '');
             const parts = newValue.split('.');
@@ -833,7 +833,7 @@ export default function NovaOS() {
                 boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
             }}>
                 <h2 style={{ color: '#2c3e50', margin: 0, fontSize: '1.6em' }}>
-                    Criar Ordem de Serviço
+                    Nova Ordem de Serviço
                 </h2>
 
                 <button
@@ -907,7 +907,7 @@ export default function NovaOS() {
                         <FormInput label="Tiragem" name="tiragem" value={formData.tiragem} onChange={handleChange} type="numeric" />
                     </SubGrid>
                     <CustomSelect
-                        label="Impressao"
+                        label="Impressão"
                         name="impressao"
                         value={formData.impressao}
                         onChange={handleChange}
