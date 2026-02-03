@@ -67,7 +67,7 @@ const CustomSelect = ({ label, name, value, onChange, options, placeholder, canC
             <input
                 type="text"
                 value={isDisabled ? '' : searchTerm}
-                onChange={(e) => { setSearchTerm(e.target.value); if(canCreate) onChange(e); }}
+                onChange={(e) => { setSearchTerm(e.target.value); if (canCreate) onChange(e); }}
                 onClick={() => !isDisabled && setIsOpen(!isOpen)}
                 style={styles.datalistInput}
                 placeholder={isDisabled ? 'Selecione primeiro...' : placeholder}
@@ -124,7 +124,7 @@ export default function EditarOS() {
     const [loading, setLoading] = useState(false);
 
     // Listas de campos para validação (IGUAL NovaOS)
-    const camposEstritamenteNumericos = ['num_orc', 'num_pag', 'tiragem', 'cores_miolo', 'miolo_gramas', 'cores_capa', 'capa_gramas', 'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas'];
+    const camposEstritamenteNumericos = ['num_orc', 'num_pag', 'tiragem', 'cores_miolo_frente', 'cores_miolo_verso', 'cores_especiais_miolo_frente', 'cores_especiais_miolo_verso', 'miolo_gramas', 'cores_capa_frente', 'cores_capa_verso', 'cores_especiais_capa_frente', 'cores_especiais_capa_verso', 'capa_gramas', 'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas'];
     const camposDecimais = ['lombada', 'tempo_operador'];
 
 
@@ -133,7 +133,7 @@ export default function EditarOS() {
             <div style={{ padding: '40px', textAlign: 'center' }}>
                 <h2 style={{ color: '#e74c3c' }}>Acesso Restrito</h2>
                 <p>O seu perfil de visualizador não permite criar novas Ordens de Serviço.</p>
-                <button 
+                <button
                     onClick={() => navigate('/dashboard')}
                     style={{ padding: '10px 20px', cursor: 'pointer', backgroundColor: '#3498db', color: '#fff', border: 'none', borderRadius: '4px' }}
                 >
@@ -185,52 +185,49 @@ export default function EditarOS() {
 
     return (
         <div style={styles.container}>
-
-
-
-<div style={{ 
-    display: 'flex', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    marginBottom: '25px',
-    backgroundColor: '#fff',
-    padding: '15px 20px',
-    borderRadius: '8px',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-}}>
-    <h2 style={{ color: '#2c3e50', margin: 0, fontSize: '1.6em' }}>
-                Editar Ordem de Serviço {formData.num_o_s ? `#${formData.num_o_s}` : ''}
-            </h2>
-
-
-    <div style={{ display: 'flex', gap: '12px' }}>
-        <button
-            onClick={() => navigate(-1)}
-            style={{
+            <div style={{
                 display: 'flex',
+                justifyContent: 'space-between',
                 alignItems: 'center',
-                gap: '8px',
-                backgroundColor: '#2c3e50',
-                color: 'white',
-                border: 'none',
-                padding: '10px 20px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '0.9em',
-                transition: 'background-color 0.2s'
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#7f8c8d'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#2c3e50'}
-        >
-            ← Voltar
-        </button>
+                marginBottom: '25px',
+                backgroundColor: '#fff',
+                padding: '15px 20px',
+                borderRadius: '8px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+            }}>
+                <h2 style={{ color: '#2c3e50', margin: 0, fontSize: '1.6em' }}>
+                    Editar Ordem de Serviço {formData.num_o_s ? `#${formData.num_o_s}` : ''}
+                </h2>
 
-    </div>
-</div>
+
+                <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                        onClick={() => navigate(-1)}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            backgroundColor: '#2c3e50',
+                            color: 'white',
+                            border: 'none',
+                            padding: '10px 20px',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            fontSize: '0.9em',
+                            transition: 'background-color 0.2s'
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = '#7f8c8d'}
+                        onMouseOut={(e) => e.target.style.backgroundColor = '#2c3e50'}
+                    >
+                        ← Voltar
+                    </button>
+
+                </div>
+            </div>
 
             <form onSubmit={handleSubmit} style={styles.form}>
-                
+
                 <Section title="INFORMAÇÃO BÁSICA">
                     <FormInput label="Nº Ordem Serviço" name="num_o_s" value={formData.num_o_s} readOnly />
                     <FormInput label="Nº Orçamento" name="num_orc" value={formData.num_orc} onChange={handleChange} />
@@ -238,8 +235,8 @@ export default function EditarOS() {
                     <FormInput label="Cliente" name="cliente" value={formData.cliente} onChange={handleChange} required fullWidth />
                     <FormInput label="Descrição do Trabalho" name="desc_trab" value={formData.desc_trab} onChange={handleChange} isTextArea required fullWidth />
                     <SubGrid>
-                        <FormInput label="Data de Abertura" name="data_aber" value={formData.data_aber ? formData.data_aber.slice(0,10) : ''} readOnly />
-                        <FormInput label="Data de Receção" name="data_recep" value={formData.data_recep ? formData.data_recep.slice(0,10) : ''} onChange={handleChange} type="date" />
+                        <FormInput label="Data de Abertura" name="data_aber" value={formData.data_aber ? formData.data_aber.slice(0, 10) : ''} readOnly />
+                        <FormInput label="Data de Receção" name="data_recep" value={formData.data_recep ? formData.data_recep.slice(0, 10) : ''} onChange={handleChange} type="date" />
                         <CustomSelect label="Estado" name="estado" value={formData.estado} onChange={handleChange} options={ESTADO_OPTIONS} required />
                     </SubGrid>
                 </Section>
@@ -251,16 +248,63 @@ export default function EditarOS() {
                         <FormInput label="Tiragem" name="tiragem" value={formData.tiragem} onChange={handleChange} />
                     </SubGrid>
                     <SubGrid>
-                    <CustomSelect label="Impressão" name="impressao" value={formData.impressao} onChange={handleChange} options={IMPRESSAO_OPTIONS} />
-                    <CustomSelect label="Máquina" name="maquina" value={formData.maquina} onChange={handleChange} options={MAQUINA_MAPPING[formData.impressao] || []} isDisabled={!formData.impressao} />
-                    <FormInput label="Lineatura" name="lineatura" value={formData.lineatura} onChange={handleChange} />
+                        <CustomSelect label="Impressão" name="impressao" value={formData.impressao} onChange={handleChange} options={IMPRESSAO_OPTIONS} />
+                        <CustomSelect label="Máquina" name="maquina" value={formData.maquina} onChange={handleChange} options={MAQUINA_MAPPING[formData.impressao] || []} isDisabled={!formData.impressao} />
+                        <FormInput label="Lineatura" name="lineatura" value={formData.lineatura} onChange={handleChange} />
                     </SubGrid>
                     <FormInput label="Observações Gerais" name="observacoes_gerais" value={formData.observacoes_gerais} onChange={handleChange} isTextArea fullWidth />
                 </Section>
 
                 <Section title="CARACTERÍSTICAS MIOLO (definição papel)">
                     <CustomSelect label="Acabamento" name="tipo_acabamento_miolo" value={formData.tipo_acabamento_miolo} onChange={handleChange} options={ACABAMENTO_OPTIONS} />
-                    <FormInput label="Cores" name="cores_miolo" value={formData.cores_miolo} onChange={handleChange} />
+                    {/* CORES MIOLO EDITÁVEL */}
+                    <div style={{ marginBottom: '10px' }}>
+                        <label style={styles.label}>Cores</label>
+                        <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
+                            <input
+                                name="cores_miolo_frente"
+                                value={formData.cores_miolo_frente || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                type="number"
+                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                            />
+                            <span style={{ fontWeight: 'bold', color: '#3498db', padding: '0 4px' }}>/</span>
+                            <input
+                                name="cores_miolo_verso"
+                                value={formData.cores_miolo_verso || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                type="number"
+                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                            />
+                        </div>
+                    </div>
+
+                    {/* CORES ESPECIAIS MIOLO EDITÁVEL */}
+                    <div style={{ marginBottom: '10px' }}>
+                        <label style={styles.label}>Cores Especiais</label>
+                        <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
+                            <input
+                                name="cores_especiais_miolo_frente"
+                                value={formData.cores_especiais_miolo_frente || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                type="number"
+                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                            />
+                            <span style={{ fontWeight: 'bold', color: '#3498db', padding: '0 4px' }}>/</span>
+                            <input
+                                name="cores_especiais_miolo_verso"
+                                value={formData.cores_especiais_miolo_verso || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                type="number"
+                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                            />
+                        </div>
+                    </div>
+
                     <SubGrid>
                         <CustomSelect label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} options={PAPEL_OPTIONS} />
                         <FormInput label="Gramagem (g)" name="miolo_gramas" value={formData.miolo_gramas} onChange={handleChange} />
@@ -278,7 +322,53 @@ export default function EditarOS() {
 
                 <Section title="CARACTERÍSTICAS CAPA">
                     <FormInput label="Lombada (mm)" name="lombada" value={formData.lombada} onChange={handleChange} />
-                    <FormInput label="Cores" name="cores_capa" value={formData.cores_capa} onChange={handleChange} />
+                    {/* CORES CAPA EDITÁVEL */}
+                    <div style={{ marginBottom: '10px' }}>
+                        <label style={styles.label}>Cores</label>
+                        <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
+                            <input
+                                name="cores_capa_frente"
+                                value={formData.cores_capa_frente || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                type="number"
+                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                            />
+                            <span style={{ fontWeight: 'bold', color: '#3498db', padding: '0 4px' }}>/</span>
+                            <input
+                                name="cores_capa_verso"
+                                value={formData.cores_capa_verso || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                type="number"
+                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                            />
+                        </div>
+                    </div>
+                    {/* CORES ESPECIAIS CAPA EDITÁVEL */}
+                    <div style={{ marginBottom: '10px' }}>
+                        <label style={styles.label}>Cores</label>
+                        <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
+                            <input
+                                name="cores_especiais_capa_frente"
+                                value={formData.cores_especiais_capa_frente || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                type="number"
+                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                            />
+                            <span style={{ fontWeight: 'bold', color: '#3498db', padding: '0 4px' }}>/</span>
+                            <input
+                                name="cores_especiais_capa_verso"
+                                value={formData.cores_especiais_capa_verso || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                type="number"
+                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                            />
+                        </div>
+                    </div>
+
                     <SubGrid layoutType="three">
                         <CustomSelect label="Papel" name="papel_capa" value={formData.papel_capa} onChange={handleChange} options={PAPEL_OPTIONS} />
                         <FormInput label="Gramagem (g)" name="capa_gramas" value={formData.capa_gramas} onChange={handleChange} />

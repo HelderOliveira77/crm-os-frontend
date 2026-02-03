@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext'; 
+import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:3000';
@@ -10,16 +10,16 @@ function DashboardHome() {
   const [ordensServico, setOrdensServico] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   // ESTADOS PARA OS FILTROS
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('TODOS');
 
-// Função para lidar com o erro de sessão
-const handleSessionError = () => {
-  logout(); // Limpa token e user do localStorage e estado global
-  navigate('/'); // Redireciona para a página de login (ou '/' se for o seu caso)
-};
+  // Função para lidar com o erro de sessão
+  const handleSessionError = () => {
+    logout(); // Limpa token e user do localStorage e estado global
+    navigate('/'); // Redireciona para a página de login (ou '/' se for o seu caso)
+  };
 
   useEffect(() => {
     const fetchOrdensServico = async () => {
@@ -27,9 +27,9 @@ const handleSessionError = () => {
 
       if (!token) {
         setLoading(false);
-        return; 
+        return;
       }
-      
+
       try {
         setLoading(true);
         const response = await fetch(`${API_URL}/api/os`, {
@@ -52,7 +52,7 @@ const handleSessionError = () => {
         const data = await response.json();
         setOrdensServico(data);
         setError(null);
-        
+
       } catch (err) {
         console.error("Erro ao buscar OS:", err);
         setError(err.message);
@@ -80,7 +80,7 @@ const handleSessionError = () => {
 
     // 2. Filtro por Estado
     const matchesStatus = statusFilter === 'TODOS' || os.estado === statusFilter;
-    
+
     return matchesSearch && matchesStatus;
   });
 
@@ -98,14 +98,14 @@ const handleSessionError = () => {
     <div style={{ padding: '40px', textAlign: 'center', color: '#e74c3c' }}>
       <h3>Atenção</h3>
       <p>{error}</p>
-      <button 
-        onClick={handleSessionError} 
-        style={{ 
-          padding: '10px 20px', 
-          backgroundColor: '#3498db', 
-          color: 'white', 
-          border: 'none', 
-          borderRadius: '4px', 
+      <button
+        onClick={handleSessionError}
+        style={{
+          padding: '10px 20px',
+          backgroundColor: '#3498db',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
           cursor: 'pointer',
           fontWeight: 'bold'
         }}
@@ -114,25 +114,25 @@ const handleSessionError = () => {
       </button>
     </div>
   );
-  
+
   return (
     <div style={{ padding: '20px', fontFamily: 'Inter, sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <h2 style={{ margin: 0 }}>Ordens de Serviço</h2>
-        
+
         <div style={{ display: 'flex', alignItems: 'center' }}>
           {/* PESQUISA POR TEXTO */}
-          <input 
-            type="text" 
-            placeholder="Pesquisar por Nº OS, Cliente ou Data..." 
+          <input
+            type="text"
+            placeholder="Pesquisar por Nº OS, Cliente ou Data..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={searchInputStyle}
           />
 
           {/* FILTRO POR STATUS */}
-          <select 
-            value={statusFilter} 
+          <select
+            value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             style={selectStyle}
           >
@@ -142,19 +142,19 @@ const handleSessionError = () => {
             <option value="FECHADO">Fechadas</option>
           </select>
 
-         {/* ALTERAÇÃO: Botão Nova OS visível apenas para Admin e Technician */}
-         {(user?.role === 'Admin' || user?.role === 'Technician') && (
+          {/* ALTERAÇÃO: Botão Nova OS visível apenas para Admin e Technician */}
+          {(user?.role === 'Admin' || user?.role === 'Technician') && (
             <Link to="/dashboard/os/nova" style={{ ...btnActionStyle, backgroundColor: '#2ecc71', padding: '10px 20px', marginRight: 0 }}>
               + Nova OS
             </Link>
           )}
         </div>
       </div>
-      
+
       <p style={{ color: '#666', fontSize: '1em' }}>
         A mostrar: <strong>{filteredOS.length}</strong> de {ordensServico.length} registos
       </p>
-      
+
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
           <thead>
@@ -167,8 +167,10 @@ const handleSessionError = () => {
               {/*  <th style={tableHeaderStyle}>Data Recepção</th>
               <th style={tableHeaderStyle}>Orçamento</th>
               <th style={tableHeaderStyle}>Formato</th>
-              <th style={tableHeaderStyle}>Cores Miolo</th>
-              <th style={tableHeaderStyle}>Cores Capa</th>
+              <th style={tableHeaderStyle}>Cores Miolo Frente</th>
+              <th style={tableHeaderStyle}>Cores Miolo Verso</th>
+              <th style={tableHeaderStyle}>Cores Capa Frente</th>
+              <th style={tableHeaderStyle}>Cores Capa Verso</th>
               <th style={tableHeaderStyle}>N.º Páginas</th>
               <th style={tableHeaderStyle}>Lombada</th>
               <th style={tableHeaderStyle}>Observações Gerais</th> */}
@@ -186,16 +188,20 @@ const handleSessionError = () => {
                 <td style={tableCellStyle}>{os.cliente || 'N/A'}</td>
                 <td style={tableCellStyle}>{os.desc_trab?.substring(0, 40)}...</td>
                 <td style={tableCellStyle}>
-                    {os.data_aber ? new Date(os.data_aber).toLocaleDateString('pt-PT') : 'N/A'}
-                    </td>
+                  {os.data_aber ? new Date(os.data_aber).toLocaleDateString('pt-PT') : 'N/A'}
+                </td>
 
                 {/* MAPEAMENTO DOS CAMPOS COMENTADOS */}
                 {/* <td style={tableCellStyle}>{os.data_aber}</td>
                 <td style={tableCellStyle}>{os.data_recep}</td>
                 <td style={tableCellStyle}>{os.num_orc}</td>
                 <td style={tableCellStyle}>{os.formato}</td>
-                <td style={tableCellStyle}>{os.cores_miolo}</td>
-                <td style={tableCellStyle}>{os.cores_capa}</td>
+               CORES MIOLO
+                <td style={tableCellStyle}>
+                  {os.cores_miolo_frente} / {os.cores_miolo_verso}</td>
+               CORES CAPA
+                <td style={tableCellStyle}>
+                  {os.cores_capa_frente} / {os.cores_capa_verso}</td>
                 <td style={tableCellStyle}>{os.num_pag}</td>
                 <td style={tableCellStyle}>{os.lombada}</td>
                 <td style={tableCellStyle}>{os.observacoes_gerais}</td> */}
@@ -204,7 +210,7 @@ const handleSessionError = () => {
                 <td style={tableCellStyle}>{os.tiragem || '-'}</td> */}
                 <td style={tableCellStyle}>{os.operador || '-'}</td>
                 <td style={tableCellStyle}>
-                  <span style={{ 
+                  <span style={{
                     padding: '3px 8px', borderRadius: '10px', fontSize: '0.75em', fontWeight: 'bold',
                     backgroundColor: os.estado === 'FECHADO' ? '#e74c3c' : os.estado === 'PENDENTE' ? '#f39c12' : '#2ecc71',
                     color: 'white'
@@ -214,8 +220,8 @@ const handleSessionError = () => {
                 </td>
                 <td style={{ ...tableCellStyle, whiteSpace: 'nowrap' }}>
                   <Link to={`/dashboard/os/visualizar/${os.id}`} style={{ ...btnActionStyle, backgroundColor: '#3498db' }}>Ver</Link>
-                 {/* ALTERAÇÃO: Botão Editar visível apenas para Admin e Technician */}
-                 {(user?.role === 'Admin' || user?.role === 'Technician') && (
+                  {/* ALTERAÇÃO: Botão Editar visível apenas para Admin e Technician */}
+                  {(user?.role === 'Admin' || user?.role === 'Technician') && (
                     <Link to={`/dashboard/os/editar/${os.id}`} style={{ ...btnActionStyle, backgroundColor: '#f39c12' }}>Editar</Link>
                   )}
                 </td>

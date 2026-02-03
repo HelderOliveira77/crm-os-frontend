@@ -26,7 +26,7 @@ const MAQUINA_MAPPING = {
     'N/A': [], // N/A não tem máquina associada
     'DEFAULT': []
 };
-const ACABAMENTO_OPTIONS = ['AGRAFADO','APARADO', 'COLADO LOMBADA', 'CORTES RETOS', 'COSIDO', 'SEM ACABAMENTO', 'SERROTADO',];
+const ACABAMENTO_OPTIONS = ['AGRAFADO', 'APARADO', 'COLADO LOMBADA', 'CORTES RETOS', 'COSIDO', 'SEM ACABAMENTO', 'SERROTADO',];
 const PAPEL_OPTIONS = ['AUTOCOLANTES', 'CARTE LUMINA', 'COUCHE MATE', 'COUCHE BRILHO', 'COUCHE SILK', 'CREATOR STAR', 'CARTOLINA FOLDING', 'CARTOLINA (Verso cinza)',
     'ENVIPRESS', 'EAGLE CREAM', 'HOLMEN VIEW', 'IOR', 'LWC', 'NEWSPRESS', 'NEWSPRINT', 'OFFSET', 'OPALE TELADO', 'PAPEL RECICLADO',
     'UNO FINESS GLOSS', 'UNO PRIME GLOSS', 'UNO BRIGHT SATIN', 'UNO PRIME SATIN', 'UNO WEB WHITE GLOSS', 'UNO WEB WHITE BULKY', 'UPM ULTRA GLOSS', 'UPM COTE ', 'UPM EXO 72 C',
@@ -609,7 +609,7 @@ export default function NovaOS() {
             <div style={{ padding: '40px', textAlign: 'center' }}>
                 <h2 style={{ color: '#e74c3c' }}>Acesso Restrito</h2>
                 <p>O seu perfil de visualizador não permite criar novas Ordens de Serviço.</p>
-                <button 
+                <button
                     onClick={() => navigate('/dashboard')}
                     style={{ padding: '10px 20px', cursor: 'pointer', backgroundColor: '#3498db', color: '#fff', border: 'none', borderRadius: '4px' }}
                 >
@@ -637,7 +637,10 @@ export default function NovaOS() {
         maquina: '',
         impressao: '',
         lineatura: '',
-        cores_miolo: '',
+        cores_miolo_frente: '0',
+        cores_miolo_verso: '0',
+        cores_especial_miolo_frente: '0',
+        cores_especial_miolo_verso: '0',
         papel_miolo: '',
         miolo_gramas: '',
         bobine_miolo: '',
@@ -646,7 +649,10 @@ export default function NovaOS() {
         verniz_miolo_geral_reservado: '',
         tipo_acabamento_miolo: '',
         observacoes_miolo: '',
-        cores_capa: '',
+        cores_capa_frente: '0',
+        cores_capa_verso: '0',
+        cores_especial_capa_frente: '0',
+        cores_especial_capa_verso: '0',
         papel_capa: '',
         capa_gramas: '',
         bobine_capa: '',
@@ -731,8 +737,8 @@ export default function NovaOS() {
 
     // 1. DEFINIÇÃO DAS LISTAS DE CAMPOS (Dentro do componente)
     const camposEstritamenteNumericos = [
-        'num_orc', 'num_pag', 'tiragem', 'cores_miolo', 'miolo_gramas',
-        'cores_capa', 'capa_gramas',
+        'num_orc', 'num_pag', 'tiragem', 'cores_miolo_frente', 'cores_miolo_verso', 'cores_especiais_miolo_frente', 'cores_especiais_miolo_verso', 'miolo_gramas',
+        'cores_capa_frente', 'cores_capa_verso', 'cores_especiais_capa_frente','cores_especiais_capa_verso', 'capa_gramas',
         'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas', 'lineatura'
     ];
     const camposDecimais = ['lombada', 'tempo_operador'];
@@ -920,7 +926,7 @@ export default function NovaOS() {
                         canCreate={true}
                         placeholder={maquinaPlaceholder}
                         isDisabled={isMaquinaDisabled} />
-                   <FormInput label="Lineatura" name="lineatura" value={formData.lineatura} onChange={handleChange} type="numeric" />
+                    <FormInput label="Lineatura" name="lineatura" value={formData.lineatura} onChange={handleChange} type="numeric" />
                     <FormInput label="Observações Gerais" name="observacoes_gerais" value={formData.observacoes_gerais} onChange={handleChange} isTextArea fullWidth />
                 </Section>
                 {/* 3. CARACTERÍSTICAS MIOLO */}
@@ -934,7 +940,110 @@ export default function NovaOS() {
                         required
                         canCreate={true}
                         placeholder="Selecione..." />
-                    <FormInput label="Cores" name="cores_miolo" value={formData.cores_miolo} onChange={handleChange} type="numeric" />
+                    {/* CORES MIOLO */}
+                    {/* <FormInput label="Cores" name="cores_miolo_frente" value={formData.cores_miolo} onChange={handleChange} type="numeric" /> */}
+                    <div style={{ marginBottom: '10px' }}>
+                        <label style={styles.label}>Cores</label>
+                        <div style={{
+                            ...styles.input, // Usa o estilo base dos seus outros inputs
+                            display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
+                            alignItems: 'center',
+                            padding: '0 5px',       // Reduzido padding lateral da caixa
+                            width: 'auto',          // Ajusta à largura dos números
+                            minWidth: '120px'
+                        }}>
+                            <input
+                                name="cores_miolo_frente"
+                                value={formData.cores_miolo_frente || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                style={{
+                                    width: '40px',   // Largura fixa pequena
+                                    border: 'none',
+                                    outline: 'none',
+                                    textAlign: 'right', // Alinha à direita para encostar na barra
+                                    background: 'transparent',
+                                    padding: '12px 0',
+                                    fontSize: '1em'
+                                }}
+                                type="number"
+                            />
+
+                            <span style={{
+                                fontWeight: 'bold',
+                                color: 'black',
+                                padding: '0 4px'
+                            }}>/</span>
+
+                            <input
+                                name="cores_miolo_verso"
+                                value={formData.cores_miolo_verso || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                style={{
+                                    width: '40px',   // Largura fixa pequena
+                                    border: 'none',
+                                    outline: 'none',
+                                    textAlign: 'left',  // Alinha à esquerda para encostar na barra
+                                    background: 'transparent',
+                                    padding: '12px 0',
+                                    fontSize: '1em'
+                                }}
+                                type="number"
+                            />
+                        </div>
+                    </div>
+                    {/* CORES ESPECIAIS MIOLO */}
+                    {/* <FormInput label="Cores" name="cores_miolo_frente" value={formData.cores_miolo} onChange={handleChange} type="numeric" /> */}
+                    <div style={{ marginBottom: '10px' }}>
+                        <label style={styles.label}>Cores Especiais</label>
+                        <div style={{
+                            ...styles.input, // Usa o estilo base dos seus outros inputs
+                            display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
+                            alignItems: 'center',
+                            padding: '0 5px',       // Reduzido padding lateral da caixa
+                            width: 'auto',          // Ajusta à largura dos números
+                            minWidth: '120px'
+                        }}>
+                            <input
+                                name="cores_especial_miolo_frente"
+                                value={formData.cores_especial_miolo_frente || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                style={{
+                                    width: '40px',   // Largura fixa pequena
+                                    border: 'none',
+                                    outline: 'none',
+                                    textAlign: 'right', // Alinha à direita para encostar na barra
+                                    background: 'transparent',
+                                    padding: '12px 0',
+                                    fontSize: '1em'
+                                }}
+                                type="number"
+                            />
+                            <span style={{
+                                fontWeight: 'bold',
+                                color: 'black',
+                                padding: '0 4px'
+                            }}>/</span>
+                            <input
+                                name="cores_especial_miolo_verso"
+                                value={formData.cores_especial_miolo_verso || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                style={{
+                                    width: '40px',   // Largura fixa pequena
+                                    border: 'none',
+                                    outline: 'none',
+                                    textAlign: 'left',  // Alinha à esquerda para encostar na barra
+                                    background: 'transparent',
+                                    padding: '12px 0',
+                                    fontSize: '1em'
+                                }}
+                                type="number"
+                            />
+                        </div>
+                    </div>
                     <SubGrid layoutType="three">
                         {/* <FormInput label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} type="text" /> */}
                         <CustomSelect
@@ -1007,7 +1116,114 @@ export default function NovaOS() {
                 {/* 4. CARACTERÍSTICAS CAPA */}
                 <Section title="CARACTERÍSTICAS CAPA" layoutType="two-fixed">
                     <FormInput label="Lombada (mm)" name="lombada" value={formData.lombada} onChange={handleChange} type="numeric" step="0.01" />
-                    <FormInput label="Cores" name="cores_capa" value={formData.cores_capa} onChange={handleChange} type="numeric" />
+                    {/* CORES CAPA */}
+                    {/* <FormInput label="Cores" name="cores_capa" value={formData.cores_capa} onChange={handleChange} type="numeric" /> */}
+                    <div style={{ marginBottom: '10px' }}>
+                        <label style={styles.label}>Cores</label>
+                        <div style={{
+                            ...styles.input, // Usa o estilo base dos seus outros inputs
+                            display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
+                            alignItems: 'center',
+                            padding: '0 5px',       // Reduzido padding lateral da caixa
+                            width: 'auto',          // Ajusta à largura dos números
+                            minWidth: '120px'
+                        }}>
+                            <input
+                                name="cores_capa_frente"
+                                value={formData.cores_capa_frente || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                style={{
+                                    width: '40px',   // Largura fixa pequena
+                                    border: 'none',
+                                    outline: 'none',
+                                    textAlign: 'right', // Alinha à direita para encostar na barra
+                                    background: 'transparent',
+                                    padding: '12px 0',
+                                    fontSize: '1em'
+                                }}
+                                type="number"
+                            />
+
+                            <span style={{
+                                fontWeight: 'bold',
+                                color: 'black',
+                                padding: '0 10px'
+                            }}>/</span>
+
+                            <input
+                                name="cores_capa_verso"
+                                value={formData.cores_capa_verso || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                style={{
+                                    width: '40px',   // Largura fixa pequena
+                                    border: 'none',
+                                    outline: 'none',
+                                    textAlign: 'left',  // Alinha à esquerda para encostar na barra
+                                    background: 'transparent',
+                                    padding: '12px 0',
+                                    fontSize: '1em'
+                                }}
+                                type="number"
+                            />
+                        </div>
+                    </div>
+                    {/* CORES ESPECIAIS CAPA */}
+                    {/* <FormInput label="Cores" name="cores_miolo_frente" value={formData.cores_miolo} onChange={handleChange} type="numeric" /> */}
+                    <div style={{ marginBottom: '10px' }}>
+                        <label style={styles.label}>Cores Especiais</label>
+                        <div style={{
+                            ...styles.input, // Usa o estilo base dos seus outros inputs
+                            display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
+                            alignItems: 'center',
+                            padding: '0 5px',       // Reduzido padding lateral da caixa
+                            width: 'auto',          // Ajusta à largura dos números
+                            minWidth: '120px'
+                        }}>
+                            <input
+                                name="cores_especial_capa_frente"
+                                value={formData.cores_especial_capa_frente || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                style={{
+                                    width: '40px',   // Largura fixa pequena
+                                    border: 'none',
+                                    outline: 'none',
+                                    textAlign: 'right', // Alinha à direita para encostar na barra
+                                    background: 'transparent',
+                                    padding: '12px 0',
+                                    fontSize: '1em'
+                                }}
+                                type="number"
+                            />
+                            <span style={{
+                                fontWeight: 'bold',
+                                color: 'black',
+                                padding: '0 4px'
+                            }}>/</span>
+                            <input
+                                name="cores_especial_capa_verso"
+                                value={formData.cores_especial_capa_verso || ''}
+                                onChange={handleChange}
+                                placeholder="0"
+                                style={{
+                                    width: '40px',   // Largura fixa pequena
+                                    border: 'none',
+                                    outline: 'none',
+                                    textAlign: 'left',  // Alinha à esquerda para encostar na barra
+                                    background: 'transparent',
+                                    padding: '12px 0',
+                                    fontSize: '1em'
+                                }}
+                                type="number"
+                            />
+                        </div>
+                    </div>
+
+
+
+
                     <SubGrid layoutType="three">
                         {/* <FormInput label="Papel" name="papel_capa" value={formData.papel_capa} onChange={handleChange} type="text" /> */}
                         <CustomSelect

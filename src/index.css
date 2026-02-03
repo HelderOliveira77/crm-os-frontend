@@ -133,5 +133,19 @@ button:focus-visible {
     z-index: 99; /* Texto fica obrigatoriamente por cima */
     position: absolute;
     color: black !important; /* Força a cor preta */
-  }
+  } 
+}
+
+/* --- ADICIONAR NO FIM DO FICHEIRO --- */
+
+/* Esconde as setas para Chrome, Safari, Edge e Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Esconde as setas para Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

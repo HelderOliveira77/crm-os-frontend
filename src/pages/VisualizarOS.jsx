@@ -61,7 +61,7 @@ const ViewField = ({ label, value, fullWidth = false, isTextArea = false }) => (
     <div style={{ marginBottom: '10px', gridColumn: fullWidth ? '1 / -1' : 'auto' }}>
         <label style={styles.label}>{label}</label>
         <div style={isTextArea ? styles.textAreaView : styles.viewField}>
-            {value || '---'}
+        {value !== undefined && value !== null ? value : '---'}
         </div>
     </div>
 );
@@ -174,7 +174,12 @@ export default function VisualizarOS() {
                     {/* 3. CARACTERÍSTICAS MIOLO */}
                     <Section title="CARACTERÍSTICAS MIOLO (definição papel)">
                         <ViewField label="Acabamento" value={formData.tipo_acabamento_miolo} />
-                        <ViewField label="Cores" value={formData.cores_miolo} />
+                        <ViewField
+                            label="Cores"
+                            value={`${formData.cores_miolo_frente || 0} / ${formData.cores_miolo_verso || 0}`} />
+                        <ViewField
+                            label="Cores Especiais"
+                            value={`${formData.cores_especiais_miolo_frente || 0} / ${formData.cores_especiais_miolo_verso || 0}`} />
                         <SubGrid>
                             <ViewField label="Papel" value={formData.papel_miolo} />
                             <ViewField label="Gramagem (g)" value={formData.miolo_gramas} />
@@ -191,7 +196,12 @@ export default function VisualizarOS() {
                     {/* 4. CARACTERÍSTICAS CAPA */}
                     <Section title="CARACTERÍSTICAS CAPA">
                         <ViewField label="Lombada (mm)" value={formData.lombada} />
-                        <ViewField label="Cores" value={formData.cores_capa} />
+                        <ViewField
+                            label="Cores"
+                            value={`${formData.cores_capa_frente || 0} / ${formData.cores_capa_verso || 0}`} />
+                         <ViewField
+                            label="Cores Especiais"
+                            value={`${formData.cores_especiais_capa_frente || 0} / ${formData.cores_especiais_capa_verso || 0}`} />    
                         <SubGrid>
                             <ViewField label="Papel" value={formData.papel_capa} />
                             <ViewField label="Gramagem (g)" value={formData.capa_gramas} />
@@ -256,13 +266,19 @@ export default function VisualizarOS() {
                     {formData.desc_trab}
                 </span>
                 <span className="data-field" style={{ top: '53mm', left: '80mm' }}>{formData.lineatura}</span>
-                <span className="data-field" style={{ top: '65mm', left: '32mm' }}>{formData.cores_capa}</span>
-                <span className="data-field" style={{ top: '70.5mm', left: '32mm' }}>{formData.cores_miolo}</span>
+                <span className="data-field" style={{ top: '65mm', left: '32mm' }}>
+                    {/* Cores Capa na Guia */}
+                    {`${formData.cores_capa_frente || 0} / ${formData.cores_capa_verso || 0}`}
+                </span>
+                {/* Cores Miolo na Guia */}
+                <span className="data-field" style={{ top: '70.5mm', left: '32mm' }}>
+                    {`${formData.cores_miolo_frente || 0} / ${formData.cores_miolo_verso || 0}`}
+                </span>
                 <span className="data-field" style={{ top: '58.5mm', left: '80mm' }}>{formData.num_pag}</span>
                 <span className="data-field" style={{ top: '64.75mm', left: '80mm' }}>{formData.lombada}</span>
 
 
-               
+
                 <span className="data-field" style={{ top: '45mm', left: '175mm' }}>{formData.formato}</span>
                 {/* OBSERVAÇÕES GERAIS DO TRABALHO (Múltiplas Linhas) */}
                 <span className="data-field" style={{
