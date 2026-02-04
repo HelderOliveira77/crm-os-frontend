@@ -636,7 +636,8 @@ export default function NovaOS() {
         tiragem: '',
         maquina: '',
         impressao: '',
-        lineatura: '',
+        lineatura_capa: '',
+        lineatura_miolo: '',
         cores_miolo_frente: '0',
         cores_miolo_verso: '0',
         cores_especial_miolo_frente: '0',
@@ -738,10 +739,11 @@ export default function NovaOS() {
     // 1. DEFINIÇÃO DAS LISTAS DE CAMPOS (Dentro do componente)
     const camposEstritamenteNumericos = [
         'num_orc', 'num_pag', 'tiragem', 'cores_miolo_frente', 'cores_miolo_verso', 'cores_especiais_miolo_frente', 'cores_especiais_miolo_verso', 'miolo_gramas',
-        'cores_capa_frente', 'cores_capa_verso', 'cores_especiais_capa_frente','cores_especiais_capa_verso', 'capa_gramas',
-        'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas', 'lineatura'
+        'cores_capa_frente', 'cores_capa_verso', 'cores_especiais_capa_frente', 'cores_especiais_capa_verso', 'capa_gramas',
+        'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas'
     ];
     const camposDecimais = ['lombada', 'tempo_operador'];
+    const camposLineatura = ['lineatura_capa', 'lineatura_miolo']; // Nova lista
 
 
     const handleChange = (e) => {
@@ -754,6 +756,10 @@ export default function NovaOS() {
             newValue = value.replace(/[^0-9.]/g, '');
             const parts = newValue.split('.');
             if (parts.length > 2) newValue = parts[0] + '.' + parts.slice(1).join('');
+        }
+        if (camposLineatura.includes(name)) {
+            // Se estiver vazio, mantém vazio. Se tiver números, limpa caracteres estranhos.
+            newValue = value === '' ? '' : value.replace(/[^0-9]/g, '');
         }
 
         setFormData(prev => {
@@ -862,7 +868,8 @@ export default function NovaOS() {
 
             <form onSubmit={handleSubmit} style={styles.form}>
                 {/* 1. INFORMAÇÃO ORDEM DE SERVIÇO */}
-                <Section title="INFORMAÇÃO BÁSICA" layoutType="two-fixed">
+                <Section title="INFORMAÇÃO GERAL" layoutType="two-fixed">
+                <SubGrid layoutType="three">
                     <FormInput
                         label="Nº Ordem Serviço"
                         name="num_o_s"
@@ -873,7 +880,7 @@ export default function NovaOS() {
                         placeholder="Gerado automaticamente" />
                     <FormInput label="Nº Orçamento" name="num_orc" value={formData.num_orc} onChange={handleChange} type="numeric" />
                     <FormInput label="Depósito Legal" name="deposito_legal" value={formData.deposito_legal} onChange={handleChange} type="text" />
-
+                    </SubGrid>
                     <FormInput label="Cliente" name="cliente" value={formData.cliente} onChange={handleChange} required fullWidth type="text" />
                     <FormInput label="Descrição do Trabalho" name="desc_trab" value={formData.desc_trab} onChange={handleChange} isTextArea required type="text" fullWidth />
                     <SubGrid layoutType="three">
@@ -906,6 +913,7 @@ export default function NovaOS() {
                         <FormInput label="Nº Páginas" name="num_pag" value={formData.num_pag} onChange={handleChange} type="numeric" />
                         <FormInput label="Tiragem" name="tiragem" value={formData.tiragem} onChange={handleChange} type="numeric" />
                     </SubGrid>
+                    <SubGrid layoutType="three">
                     <CustomSelect
                         label="Impressão"
                         name="impressao"
@@ -926,11 +934,67 @@ export default function NovaOS() {
                         canCreate={true}
                         placeholder={maquinaPlaceholder}
                         isDisabled={isMaquinaDisabled} />
-                    <FormInput label="Lineatura" name="lineatura" value={formData.lineatura} onChange={handleChange} type="numeric" />
+                    {/* LINEATURA PARA A CAPA E MIOLO */}
+                    {/* <FormInput label="Lineatura (capa/miolo)" name="lineatura" value={formData.lineatura} onChange={handleChange} type="numeric" /> */}
+                    <div style={{ marginBottom: '10px' }}>
+                        <label style={styles.label}>Lineatura (capa/miolo)</label>
+                        <div style={{
+                            ...styles.input, // Usa o estilo base dos seus outros inputs
+                            display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
+                            alignItems: 'center',
+                            padding: '0 5px',       // Reduzido padding lateral da caixa
+                            width: 'auto',          // Ajusta à largura dos números
+                            minWidth: '120px'
+                        }}>
+                            <input
+                                name="lineatura_capa"
+                                value={formData.lineatura_capa || ''}
+                                onChange={handleChange}
+                                placeholder=""
+                                style={{
+                                    width: '40px',   // Largura fixa pequena
+                                    border: 'none',
+                                    outline: 'none',
+                                    textAlign: 'right', // Alinha à direita para encostar na barra
+                                    background: 'transparent',
+                                    padding: '12px 0',
+                                    fontSize: '1em'
+                                }}
+                                type="number" />
+                            <span style={{
+                                // fontWeight: 'bold',
+                                color: 'black',
+                                padding: '0 10px'
+                            }}>/</span>
+                            <input
+                                name="lineatura_miolo"
+                                value={formData.lineatura_miolo || ''}
+                                onChange={handleChange}
+                                placeholder=""
+                                style={{
+                                    width: '40px',   // Largura fixa pequena
+                                    border: 'none',
+                                    outline: 'none',
+                                    textAlign: 'left',  // Alinha à esquerda para encostar na barra
+                                    background: 'transparent',
+                                    padding: '12px 0',
+                                    fontSize: '1em'
+                                }}
+                                type="number" />
+                            <span style={{
+                                // fontWeight: 'bold',
+                                color: 'black',
+                                padding: '0 10px'
+                            }}>lpi</span>
+                        </div>
+                    </div>
+                    </SubGrid>
+
                     <FormInput label="Observações Gerais" name="observacoes_gerais" value={formData.observacoes_gerais} onChange={handleChange} isTextArea fullWidth />
                 </Section>
                 {/* 3. CARACTERÍSTICAS MIOLO */}
                 <Section title="CARACTERÍSTICAS MIOLO (definição papel)" layoutType="two-fixed">
+                <SubGrid layoutType="three">
                     <CustomSelect
                         label="Acabamento"
                         name="tipo_acabamento_miolo"
@@ -972,7 +1036,7 @@ export default function NovaOS() {
                             <span style={{
                                 fontWeight: 'bold',
                                 color: 'black',
-                                padding: '0 4px'
+                                padding: '0 10px'
                             }}>/</span>
 
                             <input
@@ -1024,7 +1088,7 @@ export default function NovaOS() {
                             <span style={{
                                 fontWeight: 'bold',
                                 color: 'black',
-                                padding: '0 4px'
+                                padding: '0 10px'
                             }}>/</span>
                             <input
                                 name="cores_especial_miolo_verso"
@@ -1044,6 +1108,7 @@ export default function NovaOS() {
                             />
                         </div>
                     </div>
+                    </SubGrid>
                     <SubGrid layoutType="three">
                         {/* <FormInput label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} type="text" /> */}
                         <CustomSelect
@@ -1115,6 +1180,7 @@ export default function NovaOS() {
                 </Section>
                 {/* 4. CARACTERÍSTICAS CAPA */}
                 <Section title="CARACTERÍSTICAS CAPA" layoutType="two-fixed">
+                <SubGrid layoutType="three">
                     <FormInput label="Lombada (mm)" name="lombada" value={formData.lombada} onChange={handleChange} type="numeric" step="0.01" />
                     {/* CORES CAPA */}
                     {/* <FormInput label="Cores" name="cores_capa" value={formData.cores_capa} onChange={handleChange} type="numeric" /> */}
@@ -1200,7 +1266,7 @@ export default function NovaOS() {
                             <span style={{
                                 fontWeight: 'bold',
                                 color: 'black',
-                                padding: '0 4px'
+                                padding: '0 10px'
                             }}>/</span>
                             <input
                                 name="cores_especial_capa_verso"
@@ -1220,9 +1286,7 @@ export default function NovaOS() {
                             />
                         </div>
                     </div>
-
-
-
+                    </SubGrid>
 
                     <SubGrid layoutType="three">
                         {/* <FormInput label="Papel" name="papel_capa" value={formData.papel_capa} onChange={handleChange} type="text" /> */}

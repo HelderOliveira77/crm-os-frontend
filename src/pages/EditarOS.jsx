@@ -228,10 +228,12 @@ export default function EditarOS() {
 
             <form onSubmit={handleSubmit} style={styles.form}>
 
-                <Section title="INFORMAÇÃO BÁSICA">
-                    <FormInput label="Nº Ordem Serviço" name="num_o_s" value={formData.num_o_s} readOnly />
-                    <FormInput label="Nº Orçamento" name="num_orc" value={formData.num_orc} onChange={handleChange} />
-                    <FormInput label="Depósito Legal" name="deposito_legal" value={formData.deposito_legal} onChange={handleChange} />
+                <Section title="INFORMAÇÃO GERAL">
+                    <SubGrid>
+                        <FormInput label="Nº Ordem Serviço" name="num_o_s" value={formData.num_o_s} readOnly />
+                        <FormInput label="Nº Orçamento" name="num_orc" value={formData.num_orc} onChange={handleChange} />
+                        <FormInput label="Depósito Legal" name="deposito_legal" value={formData.deposito_legal} onChange={handleChange} />
+                    </SubGrid>
                     <FormInput label="Cliente" name="cliente" value={formData.cliente} onChange={handleChange} required fullWidth />
                     <FormInput label="Descrição do Trabalho" name="desc_trab" value={formData.desc_trab} onChange={handleChange} isTextArea required fullWidth />
                     <SubGrid>
@@ -250,12 +252,38 @@ export default function EditarOS() {
                     <SubGrid>
                         <CustomSelect label="Impressão" name="impressao" value={formData.impressao} onChange={handleChange} options={IMPRESSAO_OPTIONS} />
                         <CustomSelect label="Máquina" name="maquina" value={formData.maquina} onChange={handleChange} options={MAQUINA_MAPPING[formData.impressao] || []} isDisabled={!formData.impressao} />
-                        <FormInput label="Lineatura" name="lineatura" value={formData.lineatura} onChange={handleChange} />
+                        {/* LINEATURA CAPA E MIOLO */}
+                        {/* <FormInput label="Lineatura" name="lineatura" value={formData.lineatura} onChange={handleChange} /> */}
+                        <div style={{ marginBottom: '10px' }}>
+                            <label style={styles.label}>Lineatura (capa/miolo)</label>
+                            <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
+                                <input
+                                    name="lineatura_capa"
+                                    value={formData.lineatura_capa || '-'}
+                                    onChange={handleChange}
+                                    placeholder="-"
+                                    type="number"
+                                    style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                                />
+                                <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
+                                <input
+                                    name="lineatura_miolo"
+                                    value={formData.lineatura_miolo || '-'}
+                                    onChange={handleChange}
+                                    placeholder="-"
+                                    type="number"
+                                    style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                                />
+                            </div>
+                        </div>
+
+
                     </SubGrid>
                     <FormInput label="Observações Gerais" name="observacoes_gerais" value={formData.observacoes_gerais} onChange={handleChange} isTextArea fullWidth />
                 </Section>
 
                 <Section title="CARACTERÍSTICAS MIOLO (definição papel)">
+                <SubGrid>
                     <CustomSelect label="Acabamento" name="tipo_acabamento_miolo" value={formData.tipo_acabamento_miolo} onChange={handleChange} options={ACABAMENTO_OPTIONS} />
                     {/* CORES MIOLO EDITÁVEL */}
                     <div style={{ marginBottom: '10px' }}>
@@ -269,7 +297,7 @@ export default function EditarOS() {
                                 type="number"
                                 style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
                             />
-                            <span style={{ fontWeight: 'bold', color: '#3498db', padding: '0 4px' }}>/</span>
+                            <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
                             <input
                                 name="cores_miolo_verso"
                                 value={formData.cores_miolo_verso || ''}
@@ -293,7 +321,7 @@ export default function EditarOS() {
                                 type="number"
                                 style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
                             />
-                            <span style={{ fontWeight: 'bold', color: '#3498db', padding: '0 4px' }}>/</span>
+                            <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
                             <input
                                 name="cores_especiais_miolo_verso"
                                 value={formData.cores_especiais_miolo_verso || ''}
@@ -304,7 +332,7 @@ export default function EditarOS() {
                             />
                         </div>
                     </div>
-
+                    </SubGrid>
                     <SubGrid>
                         <CustomSelect label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} options={PAPEL_OPTIONS} />
                         <FormInput label="Gramagem (g)" name="miolo_gramas" value={formData.miolo_gramas} onChange={handleChange} />
@@ -321,6 +349,7 @@ export default function EditarOS() {
                 </Section>
 
                 <Section title="CARACTERÍSTICAS CAPA">
+                <SubGrid>
                     <FormInput label="Lombada (mm)" name="lombada" value={formData.lombada} onChange={handleChange} />
                     {/* CORES CAPA EDITÁVEL */}
                     <div style={{ marginBottom: '10px' }}>
@@ -334,7 +363,7 @@ export default function EditarOS() {
                                 type="number"
                                 style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
                             />
-                            <span style={{ fontWeight: 'bold', color: '#3498db', padding: '0 4px' }}>/</span>
+                            <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
                             <input
                                 name="cores_capa_verso"
                                 value={formData.cores_capa_verso || ''}
@@ -357,7 +386,7 @@ export default function EditarOS() {
                                 type="number"
                                 style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
                             />
-                            <span style={{ fontWeight: 'bold', color: '#3498db', padding: '0 4px' }}>/</span>
+                            <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
                             <input
                                 name="cores_especiais_capa_verso"
                                 value={formData.cores_especiais_capa_verso || ''}
@@ -368,7 +397,7 @@ export default function EditarOS() {
                             />
                         </div>
                     </div>
-
+                    </SubGrid>
                     <SubGrid layoutType="three">
                         <CustomSelect label="Papel" name="papel_capa" value={formData.papel_capa} onChange={handleChange} options={PAPEL_OPTIONS} />
                         <FormInput label="Gramagem (g)" name="capa_gramas" value={formData.capa_gramas} onChange={handleChange} />

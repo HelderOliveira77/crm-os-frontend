@@ -61,7 +61,7 @@ const ViewField = ({ label, value, fullWidth = false, isTextArea = false }) => (
     <div style={{ marginBottom: '10px', gridColumn: fullWidth ? '1 / -1' : 'auto' }}>
         <label style={styles.label}>{label}</label>
         <div style={isTextArea ? styles.textAreaView : styles.viewField}>
-        {value !== undefined && value !== null ? value : '---'}
+            {value !== undefined && value !== null ? value : '---'}
         </div>
     </div>
 );
@@ -143,10 +143,12 @@ export default function VisualizarOS() {
 
                 <div style={styles.form}>
                     {/* 1. INFORMAÇÃO BÁSICA */}
-                    <Section title="INFORMAÇÃO BÁSICA">
-                        <ViewField label="Nº Ordem Serviço" value={formData.num_o_s} />
-                        <ViewField label="Nº Orçamento" value={formData.num_orc} />
-                        <ViewField label="Depósito Legal" value={formData.deposito_legal} />
+                    <Section title="INFORMAÇÃO GERAL">
+                        <SubGrid>
+                            <ViewField label="Nº Ordem Serviço" value={formData.num_o_s} />
+                            <ViewField label="Nº Orçamento" value={formData.num_orc} />
+                            <ViewField label="Depósito Legal" value={formData.deposito_legal} />
+                        </SubGrid>
                         <ViewField label="Cliente" value={formData.cliente} fullWidth />
                         <ViewField label="Descrição do Trabalho" value={formData.desc_trab} isTextArea fullWidth />
                         <SubGrid>
@@ -166,20 +168,25 @@ export default function VisualizarOS() {
                         <SubGrid>
                             <ViewField label="Impressão" value={formData.impressao} />
                             <ViewField label="Máquina" value={formData.maquina} />
-                            <ViewField label="Lineatura" value={formData.lineatura} />
+                            {/* <ViewField label="Lineatura" value={formData.lineatura} /> */}
+                            <ViewField
+                                label="Lineatura (capa/miolo)"
+                                value={`${formData.lineatura_capa || '-'} / ${formData.lineatura_miolo || '-'}`} />
                         </SubGrid>
                         <ViewField label="Observações Gerais" value={formData.observacoes_gerais} isTextArea fullWidth />
                     </Section>
 
                     {/* 3. CARACTERÍSTICAS MIOLO */}
                     <Section title="CARACTERÍSTICAS MIOLO (definição papel)">
-                        <ViewField label="Acabamento" value={formData.tipo_acabamento_miolo} />
-                        <ViewField
-                            label="Cores"
-                            value={`${formData.cores_miolo_frente || 0} / ${formData.cores_miolo_verso || 0}`} />
-                        <ViewField
-                            label="Cores Especiais"
-                            value={`${formData.cores_especiais_miolo_frente || 0} / ${formData.cores_especiais_miolo_verso || 0}`} />
+                        <SubGrid>
+                            <ViewField label="Acabamento" value={formData.tipo_acabamento_miolo} />
+                            <ViewField
+                                label="Cores"
+                                value={`${formData.cores_miolo_frente || 0} / ${formData.cores_miolo_verso || 0}`} />
+                            <ViewField
+                                label="Cores Especiais"
+                                value={`${formData.cores_especiais_miolo_frente || 0} / ${formData.cores_especiais_miolo_verso || 0}`} />
+                        </SubGrid>
                         <SubGrid>
                             <ViewField label="Papel" value={formData.papel_miolo} />
                             <ViewField label="Gramagem (g)" value={formData.miolo_gramas} />
@@ -195,13 +202,15 @@ export default function VisualizarOS() {
 
                     {/* 4. CARACTERÍSTICAS CAPA */}
                     <Section title="CARACTERÍSTICAS CAPA">
-                        <ViewField label="Lombada (mm)" value={formData.lombada} />
-                        <ViewField
-                            label="Cores"
-                            value={`${formData.cores_capa_frente || 0} / ${formData.cores_capa_verso || 0}`} />
-                         <ViewField
-                            label="Cores Especiais"
-                            value={`${formData.cores_especiais_capa_frente || 0} / ${formData.cores_especiais_capa_verso || 0}`} />    
+                        <SubGrid>
+                            <ViewField label="Lombada (mm)" value={formData.lombada} />
+                            <ViewField
+                                label="Cores"
+                                value={`${formData.cores_capa_frente || 0} / ${formData.cores_capa_verso || 0}`} />
+                            <ViewField
+                                label="Cores Especiais"
+                                value={`${formData.cores_especiais_capa_frente || 0} / ${formData.cores_especiais_capa_verso || 0}`} />
+                        </SubGrid>
                         <SubGrid>
                             <ViewField label="Papel" value={formData.papel_capa} />
                             <ViewField label="Gramagem (g)" value={formData.capa_gramas} />
