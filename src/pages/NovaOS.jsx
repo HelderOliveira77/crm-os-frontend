@@ -647,6 +647,7 @@ export default function NovaOS() {
         bobine_miolo: '',
         verniz_miolo: '',
         verniz_miolo_brilho_mate: '',
+        verniz_miolo_f_v: '',
         verniz_miolo_geral_reservado: '',
         tipo_acabamento_miolo: '',
         observacoes_miolo: '',
@@ -869,17 +870,17 @@ export default function NovaOS() {
             <form onSubmit={handleSubmit} style={styles.form}>
                 {/* 1. INFORMAÇÃO ORDEM DE SERVIÇO */}
                 <Section title="INFORMAÇÃO GERAL" layoutType="two-fixed">
-                <SubGrid layoutType="three">
-                    <FormInput
-                        label="Nº Ordem Serviço"
-                        name="num_o_s"
-                        value={formData.num_o_s}
-                        onChange={handleChange}
-                        type="numeric"
-                        readOnly={false}
-                        placeholder="Gerado automaticamente" />
-                    <FormInput label="Nº Orçamento" name="num_orc" value={formData.num_orc} onChange={handleChange} type="numeric" />
-                    <FormInput label="Depósito Legal" name="deposito_legal" value={formData.deposito_legal} onChange={handleChange} type="text" />
+                    <SubGrid layoutType="three">
+                        <FormInput
+                            label="Nº Ordem Serviço"
+                            name="num_o_s"
+                            value={formData.num_o_s}
+                            onChange={handleChange}
+                            type="numeric"
+                            readOnly={false}
+                            placeholder="Gerado automaticamente" />
+                        <FormInput label="Nº Orçamento" name="num_orc" value={formData.num_orc} onChange={handleChange} type="numeric" />
+                        <FormInput label="Depósito Legal" name="deposito_legal" value={formData.deposito_legal} onChange={handleChange} type="text" />
                     </SubGrid>
                     <FormInput label="Cliente" name="cliente" value={formData.cliente} onChange={handleChange} required fullWidth type="text" />
                     <FormInput label="Descrição do Trabalho" name="desc_trab" value={formData.desc_trab} onChange={handleChange} isTextArea required type="text" fullWidth />
@@ -914,200 +915,200 @@ export default function NovaOS() {
                         <FormInput label="Tiragem" name="tiragem" value={formData.tiragem} onChange={handleChange} type="numeric" />
                     </SubGrid>
                     <SubGrid layoutType="three">
-                    <CustomSelect
-                        label="Impressão"
-                        name="impressao"
-                        value={formData.impressao}
-                        onChange={handleChange}
-                        options={IMPRESSAO_OPTIONS}
-                        // required
-                        canCreate={true}
-                        placeholder="Selecione..." />
-                    {/* CAMPO MÁQUINA (DINÂMICO) */}
-                    <CustomSelect
-                        label="Maquina"
-                        name="maquina"
-                        value={formData.maquina}
-                        onChange={handleChange}
-                        options={maquinaOptions} // Opções dinâmicas e restritas!
-                        required={!isMaquinaDisabled} // Obrigatório se houver opções
-                        canCreate={true}
-                        placeholder={maquinaPlaceholder}
-                        isDisabled={isMaquinaDisabled} />
-                    {/* LINEATURA PARA A CAPA E MIOLO */}
-                    {/* <FormInput label="Lineatura (capa/miolo)" name="lineatura" value={formData.lineatura} onChange={handleChange} type="numeric" /> */}
-                    <div style={{ marginBottom: '10px' }}>
-                        <label style={styles.label}>Lineatura (capa/miolo)</label>
-                        <div style={{
-                            ...styles.input, // Usa o estilo base dos seus outros inputs
-                            display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
-                            alignItems: 'center',
-                            padding: '0 5px',       // Reduzido padding lateral da caixa
-                            width: 'auto',          // Ajusta à largura dos números
-                            minWidth: '120px'
-                        }}>
-                            <input
-                                name="lineatura_capa"
-                                value={formData.lineatura_capa || ''}
-                                onChange={handleChange}
-                                placeholder=""
-                                style={{
-                                    width: '40px',   // Largura fixa pequena
-                                    border: 'none',
-                                    outline: 'none',
-                                    textAlign: 'right', // Alinha à direita para encostar na barra
-                                    background: 'transparent',
-                                    padding: '12px 0',
-                                    fontSize: '1em'
-                                }}
-                                type="number" />
-                            <span style={{
-                                // fontWeight: 'bold',
-                                color: 'black',
-                                padding: '0 10px'
-                            }}>/</span>
-                            <input
-                                name="lineatura_miolo"
-                                value={formData.lineatura_miolo || ''}
-                                onChange={handleChange}
-                                placeholder=""
-                                style={{
-                                    width: '40px',   // Largura fixa pequena
-                                    border: 'none',
-                                    outline: 'none',
-                                    textAlign: 'left',  // Alinha à esquerda para encostar na barra
-                                    background: 'transparent',
-                                    padding: '12px 0',
-                                    fontSize: '1em'
-                                }}
-                                type="number" />
-                            <span style={{
-                                // fontWeight: 'bold',
-                                color: 'black',
-                                padding: '0 10px'
-                            }}>lpi</span>
+                        <CustomSelect
+                            label="Impressão"
+                            name="impressao"
+                            value={formData.impressao}
+                            onChange={handleChange}
+                            options={IMPRESSAO_OPTIONS}
+                            // required
+                            canCreate={true}
+                            placeholder="Selecione..." />
+                        {/* CAMPO MÁQUINA (DINÂMICO) */}
+                        <CustomSelect
+                            label="Maquina"
+                            name="maquina"
+                            value={formData.maquina}
+                            onChange={handleChange}
+                            options={maquinaOptions} // Opções dinâmicas e restritas!
+                            required={!isMaquinaDisabled} // Obrigatório se houver opções
+                            canCreate={true}
+                            placeholder={maquinaPlaceholder}
+                            isDisabled={isMaquinaDisabled} />
+                        {/* LINEATURA PARA A CAPA E MIOLO */}
+                        {/* <FormInput label="Lineatura (capa/miolo)" name="lineatura" value={formData.lineatura} onChange={handleChange} type="numeric" /> */}
+                        <div style={{ marginBottom: '10px' }}>
+                            <label style={styles.label}>Lineatura (capa/miolo)</label>
+                            <div style={{
+                                ...styles.input, // Usa o estilo base dos seus outros inputs
+                                display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
+                                alignItems: 'center',
+                                padding: '0 5px',       // Reduzido padding lateral da caixa
+                                width: 'auto',          // Ajusta à largura dos números
+                                minWidth: '120px'
+                            }}>
+                                <input
+                                    name="lineatura_capa"
+                                    value={formData.lineatura_capa || ''}
+                                    onChange={handleChange}
+                                    placeholder=""
+                                    style={{
+                                        width: '40px',   // Largura fixa pequena
+                                        border: 'none',
+                                        outline: 'none',
+                                        textAlign: 'right', // Alinha à direita para encostar na barra
+                                        background: 'transparent',
+                                        padding: '12px 0',
+                                        fontSize: '1em'
+                                    }}
+                                    type="number" />
+                                <span style={{
+                                    // fontWeight: 'bold',
+                                    color: 'black',
+                                    padding: '0 10px'
+                                }}>/</span>
+                                <input
+                                    name="lineatura_miolo"
+                                    value={formData.lineatura_miolo || ''}
+                                    onChange={handleChange}
+                                    placeholder=""
+                                    style={{
+                                        width: '40px',   // Largura fixa pequena
+                                        border: 'none',
+                                        outline: 'none',
+                                        textAlign: 'left',  // Alinha à esquerda para encostar na barra
+                                        background: 'transparent',
+                                        padding: '12px 0',
+                                        fontSize: '1em'
+                                    }}
+                                    type="number" />
+                                <span style={{
+                                    // fontWeight: 'bold',
+                                    color: 'black',
+                                    padding: '0 10px'
+                                }}>lpi</span>
+                            </div>
                         </div>
-                    </div>
                     </SubGrid>
 
                     <FormInput label="Observações Gerais" name="observacoes_gerais" value={formData.observacoes_gerais} onChange={handleChange} isTextArea fullWidth />
                 </Section>
                 {/* 3. CARACTERÍSTICAS MIOLO */}
                 <Section title="CARACTERÍSTICAS MIOLO (definição papel)" layoutType="two-fixed">
-                <SubGrid layoutType="three">
-                    <CustomSelect
-                        label="Acabamento"
-                        name="tipo_acabamento_miolo"
-                        value={formData.tipo_acabamento_miolo}
-                        onChange={handleChange}
-                        options={ACABAMENTO_OPTIONS}
-                        required
-                        canCreate={true}
-                        placeholder="Selecione..." />
-                    {/* CORES MIOLO */}
-                    {/* <FormInput label="Cores" name="cores_miolo_frente" value={formData.cores_miolo} onChange={handleChange} type="numeric" /> */}
-                    <div style={{ marginBottom: '10px' }}>
-                        <label style={styles.label}>Cores</label>
-                        <div style={{
-                            ...styles.input, // Usa o estilo base dos seus outros inputs
-                            display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
-                            alignItems: 'center',
-                            padding: '0 5px',       // Reduzido padding lateral da caixa
-                            width: 'auto',          // Ajusta à largura dos números
-                            minWidth: '120px'
-                        }}>
-                            <input
-                                name="cores_miolo_frente"
-                                value={formData.cores_miolo_frente || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                style={{
-                                    width: '40px',   // Largura fixa pequena
-                                    border: 'none',
-                                    outline: 'none',
-                                    textAlign: 'right', // Alinha à direita para encostar na barra
-                                    background: 'transparent',
-                                    padding: '12px 0',
-                                    fontSize: '1em'
-                                }}
-                                type="number"
-                            />
+                    <SubGrid layoutType="three">
+                        <CustomSelect
+                            label="Acabamento"
+                            name="tipo_acabamento_miolo"
+                            value={formData.tipo_acabamento_miolo}
+                            onChange={handleChange}
+                            options={ACABAMENTO_OPTIONS}
+                            required
+                            canCreate={true}
+                            placeholder="Selecione..." />
+                        {/* CORES MIOLO */}
+                        {/* <FormInput label="Cores" name="cores_miolo_frente" value={formData.cores_miolo} onChange={handleChange} type="numeric" /> */}
+                        <div style={{ marginBottom: '10px' }}>
+                            <label style={styles.label}>Cores</label>
+                            <div style={{
+                                ...styles.input, // Usa o estilo base dos seus outros inputs
+                                display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
+                                alignItems: 'center',
+                                padding: '0 5px',       // Reduzido padding lateral da caixa
+                                width: 'auto',          // Ajusta à largura dos números
+                                minWidth: '120px'
+                            }}>
+                                <input
+                                    name="cores_miolo_frente"
+                                    value={formData.cores_miolo_frente || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    style={{
+                                        width: '40px',   // Largura fixa pequena
+                                        border: 'none',
+                                        outline: 'none',
+                                        textAlign: 'right', // Alinha à direita para encostar na barra
+                                        background: 'transparent',
+                                        padding: '12px 0',
+                                        fontSize: '1em'
+                                    }}
+                                    type="number"
+                                />
 
-                            <span style={{
-                                fontWeight: 'bold',
-                                color: 'black',
-                                padding: '0 10px'
-                            }}>/</span>
+                                <span style={{
+                                    fontWeight: 'bold',
+                                    color: 'black',
+                                    padding: '0 10px'
+                                }}>/</span>
 
-                            <input
-                                name="cores_miolo_verso"
-                                value={formData.cores_miolo_verso || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                style={{
-                                    width: '40px',   // Largura fixa pequena
-                                    border: 'none',
-                                    outline: 'none',
-                                    textAlign: 'left',  // Alinha à esquerda para encostar na barra
-                                    background: 'transparent',
-                                    padding: '12px 0',
-                                    fontSize: '1em'
-                                }}
-                                type="number"
-                            />
+                                <input
+                                    name="cores_miolo_verso"
+                                    value={formData.cores_miolo_verso || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    style={{
+                                        width: '40px',   // Largura fixa pequena
+                                        border: 'none',
+                                        outline: 'none',
+                                        textAlign: 'left',  // Alinha à esquerda para encostar na barra
+                                        background: 'transparent',
+                                        padding: '12px 0',
+                                        fontSize: '1em'
+                                    }}
+                                    type="number"
+                                />
+                            </div>
                         </div>
-                    </div>
-                    {/* CORES ESPECIAIS MIOLO */}
-                    {/* <FormInput label="Cores" name="cores_miolo_frente" value={formData.cores_miolo} onChange={handleChange} type="numeric" /> */}
-                    <div style={{ marginBottom: '10px' }}>
-                        <label style={styles.label}>Cores Especiais</label>
-                        <div style={{
-                            ...styles.input, // Usa o estilo base dos seus outros inputs
-                            display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
-                            alignItems: 'center',
-                            padding: '0 5px',       // Reduzido padding lateral da caixa
-                            width: 'auto',          // Ajusta à largura dos números
-                            minWidth: '120px'
-                        }}>
-                            <input
-                                name="cores_especial_miolo_frente"
-                                value={formData.cores_especial_miolo_frente || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                style={{
-                                    width: '40px',   // Largura fixa pequena
-                                    border: 'none',
-                                    outline: 'none',
-                                    textAlign: 'right', // Alinha à direita para encostar na barra
-                                    background: 'transparent',
-                                    padding: '12px 0',
-                                    fontSize: '1em'
-                                }}
-                                type="number"
-                            />
-                            <span style={{
-                                fontWeight: 'bold',
-                                color: 'black',
-                                padding: '0 10px'
-                            }}>/</span>
-                            <input
-                                name="cores_especial_miolo_verso"
-                                value={formData.cores_especial_miolo_verso || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                style={{
-                                    width: '40px',   // Largura fixa pequena
-                                    border: 'none',
-                                    outline: 'none',
-                                    textAlign: 'left',  // Alinha à esquerda para encostar na barra
-                                    background: 'transparent',
-                                    padding: '12px 0',
-                                    fontSize: '1em'
-                                }}
-                                type="number"
-                            />
+                        {/* CORES ESPECIAIS MIOLO */}
+                        {/* <FormInput label="Cores" name="cores_miolo_frente" value={formData.cores_miolo} onChange={handleChange} type="numeric" /> */}
+                        <div style={{ marginBottom: '10px' }}>
+                            <label style={styles.label}>Cores Especiais</label>
+                            <div style={{
+                                ...styles.input, // Usa o estilo base dos seus outros inputs
+                                display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
+                                alignItems: 'center',
+                                padding: '0 5px',       // Reduzido padding lateral da caixa
+                                width: 'auto',          // Ajusta à largura dos números
+                                minWidth: '120px'
+                            }}>
+                                <input
+                                    name="cores_especial_miolo_frente"
+                                    value={formData.cores_especial_miolo_frente || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    style={{
+                                        width: '40px',   // Largura fixa pequena
+                                        border: 'none',
+                                        outline: 'none',
+                                        textAlign: 'right', // Alinha à direita para encostar na barra
+                                        background: 'transparent',
+                                        padding: '12px 0',
+                                        fontSize: '1em'
+                                    }}
+                                    type="number"
+                                />
+                                <span style={{
+                                    fontWeight: 'bold',
+                                    color: 'black',
+                                    padding: '0 10px'
+                                }}>/</span>
+                                <input
+                                    name="cores_especial_miolo_verso"
+                                    value={formData.cores_especial_miolo_verso || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    style={{
+                                        width: '40px',   // Largura fixa pequena
+                                        border: 'none',
+                                        outline: 'none',
+                                        textAlign: 'left',  // Alinha à esquerda para encostar na barra
+                                        background: 'transparent',
+                                        padding: '12px 0',
+                                        fontSize: '1em'
+                                    }}
+                                    type="number"
+                                />
+                            </div>
                         </div>
-                    </div>
                     </SubGrid>
                     <SubGrid layoutType="three">
                         {/* <FormInput label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} type="text" /> */}
@@ -1162,8 +1163,19 @@ export default function NovaOS() {
                                     spacing={20}
                                 />
                             </div>
-
                             {/* Grupo 3 */}
+                            <div className="optionItem">
+                                <FormRadioGroup_2
+                                    label="Frente / Verso"
+                                    name="verniz_miolo_f_v"
+                                    value={formData.verniz_miolo_f_v}
+                                    onChange={handleChange}
+                                    options={['Frente', 'Verso']}
+                                    spacing={20}
+                                />
+                            </div>
+
+                            {/* Grupo 4 */}
                             <div className="optionItem">
                                 <FormRadioGroup_2
                                     label="Geral / Reservado"
@@ -1180,112 +1192,112 @@ export default function NovaOS() {
                 </Section>
                 {/* 4. CARACTERÍSTICAS CAPA */}
                 <Section title="CARACTERÍSTICAS CAPA" layoutType="two-fixed">
-                <SubGrid layoutType="three">
-                    <FormInput label="Lombada (mm)" name="lombada" value={formData.lombada} onChange={handleChange} type="numeric" step="0.01" />
-                    {/* CORES CAPA */}
-                    {/* <FormInput label="Cores" name="cores_capa" value={formData.cores_capa} onChange={handleChange} type="numeric" /> */}
-                    <div style={{ marginBottom: '10px' }}>
-                        <label style={styles.label}>Cores</label>
-                        <div style={{
-                            ...styles.input, // Usa o estilo base dos seus outros inputs
-                            display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
-                            alignItems: 'center',
-                            padding: '0 5px',       // Reduzido padding lateral da caixa
-                            width: 'auto',          // Ajusta à largura dos números
-                            minWidth: '120px'
-                        }}>
-                            <input
-                                name="cores_capa_frente"
-                                value={formData.cores_capa_frente || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                style={{
-                                    width: '40px',   // Largura fixa pequena
-                                    border: 'none',
-                                    outline: 'none',
-                                    textAlign: 'right', // Alinha à direita para encostar na barra
-                                    background: 'transparent',
-                                    padding: '12px 0',
-                                    fontSize: '1em'
-                                }}
-                                type="number"
-                            />
+                    <SubGrid layoutType="three">
+                        <FormInput label="Lombada (mm)" name="lombada" value={formData.lombada} onChange={handleChange} type="numeric" step="0.01" />
+                        {/* CORES CAPA */}
+                        {/* <FormInput label="Cores" name="cores_capa" value={formData.cores_capa} onChange={handleChange} type="numeric" /> */}
+                        <div style={{ marginBottom: '10px' }}>
+                            <label style={styles.label}>Cores</label>
+                            <div style={{
+                                ...styles.input, // Usa o estilo base dos seus outros inputs
+                                display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
+                                alignItems: 'center',
+                                padding: '0 5px',       // Reduzido padding lateral da caixa
+                                width: 'auto',          // Ajusta à largura dos números
+                                minWidth: '120px'
+                            }}>
+                                <input
+                                    name="cores_capa_frente"
+                                    value={formData.cores_capa_frente || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    style={{
+                                        width: '40px',   // Largura fixa pequena
+                                        border: 'none',
+                                        outline: 'none',
+                                        textAlign: 'right', // Alinha à direita para encostar na barra
+                                        background: 'transparent',
+                                        padding: '12px 0',
+                                        fontSize: '1em'
+                                    }}
+                                    type="number"
+                                />
 
-                            <span style={{
-                                fontWeight: 'bold',
-                                color: 'black',
-                                padding: '0 10px'
-                            }}>/</span>
+                                <span style={{
+                                    fontWeight: 'bold',
+                                    color: 'black',
+                                    padding: '0 10px'
+                                }}>/</span>
 
-                            <input
-                                name="cores_capa_verso"
-                                value={formData.cores_capa_verso || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                style={{
-                                    width: '40px',   // Largura fixa pequena
-                                    border: 'none',
-                                    outline: 'none',
-                                    textAlign: 'left',  // Alinha à esquerda para encostar na barra
-                                    background: 'transparent',
-                                    padding: '12px 0',
-                                    fontSize: '1em'
-                                }}
-                                type="number"
-                            />
+                                <input
+                                    name="cores_capa_verso"
+                                    value={formData.cores_capa_verso || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    style={{
+                                        width: '40px',   // Largura fixa pequena
+                                        border: 'none',
+                                        outline: 'none',
+                                        textAlign: 'left',  // Alinha à esquerda para encostar na barra
+                                        background: 'transparent',
+                                        padding: '12px 0',
+                                        fontSize: '1em'
+                                    }}
+                                    type="number"
+                                />
+                            </div>
                         </div>
-                    </div>
-                    {/* CORES ESPECIAIS CAPA */}
-                    {/* <FormInput label="Cores" name="cores_miolo_frente" value={formData.cores_miolo} onChange={handleChange} type="numeric" /> */}
-                    <div style={{ marginBottom: '10px' }}>
-                        <label style={styles.label}>Cores Especiais</label>
-                        <div style={{
-                            ...styles.input, // Usa o estilo base dos seus outros inputs
-                            display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
-                            alignItems: 'center',
-                            padding: '0 5px',       // Reduzido padding lateral da caixa
-                            width: 'auto',          // Ajusta à largura dos números
-                            minWidth: '120px'
-                        }}>
-                            <input
-                                name="cores_especial_capa_frente"
-                                value={formData.cores_especial_capa_frente || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                style={{
-                                    width: '40px',   // Largura fixa pequena
-                                    border: 'none',
-                                    outline: 'none',
-                                    textAlign: 'right', // Alinha à direita para encostar na barra
-                                    background: 'transparent',
-                                    padding: '12px 0',
-                                    fontSize: '1em'
-                                }}
-                                type="number"
-                            />
-                            <span style={{
-                                fontWeight: 'bold',
-                                color: 'black',
-                                padding: '0 10px'
-                            }}>/</span>
-                            <input
-                                name="cores_especial_capa_verso"
-                                value={formData.cores_especial_capa_verso || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                style={{
-                                    width: '40px',   // Largura fixa pequena
-                                    border: 'none',
-                                    outline: 'none',
-                                    textAlign: 'left',  // Alinha à esquerda para encostar na barra
-                                    background: 'transparent',
-                                    padding: '12px 0',
-                                    fontSize: '1em'
-                                }}
-                                type="number"
-                            />
+                        {/* CORES ESPECIAIS CAPA */}
+                        {/* <FormInput label="Cores" name="cores_miolo_frente" value={formData.cores_miolo} onChange={handleChange} type="numeric" /> */}
+                        <div style={{ marginBottom: '10px' }}>
+                            <label style={styles.label}>Cores Especiais</label>
+                            <div style={{
+                                ...styles.input, // Usa o estilo base dos seus outros inputs
+                                display: 'inline-flex', // inline-flex torna a caixa apenas do tamanho do conteúdo
+                                alignItems: 'center',
+                                padding: '0 5px',       // Reduzido padding lateral da caixa
+                                width: 'auto',          // Ajusta à largura dos números
+                                minWidth: '120px'
+                            }}>
+                                <input
+                                    name="cores_especial_capa_frente"
+                                    value={formData.cores_especial_capa_frente || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    style={{
+                                        width: '40px',   // Largura fixa pequena
+                                        border: 'none',
+                                        outline: 'none',
+                                        textAlign: 'right', // Alinha à direita para encostar na barra
+                                        background: 'transparent',
+                                        padding: '12px 0',
+                                        fontSize: '1em'
+                                    }}
+                                    type="number"
+                                />
+                                <span style={{
+                                    fontWeight: 'bold',
+                                    color: 'black',
+                                    padding: '0 10px'
+                                }}>/</span>
+                                <input
+                                    name="cores_especial_capa_verso"
+                                    value={formData.cores_especial_capa_verso || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    style={{
+                                        width: '40px',   // Largura fixa pequena
+                                        border: 'none',
+                                        outline: 'none',
+                                        textAlign: 'left',  // Alinha à esquerda para encostar na barra
+                                        background: 'transparent',
+                                        padding: '12px 0',
+                                        fontSize: '1em'
+                                    }}
+                                    type="number"
+                                />
+                            </div>
                         </div>
-                    </div>
                     </SubGrid>
 
                     <SubGrid layoutType="three">
@@ -1344,22 +1356,23 @@ export default function NovaOS() {
                             {/* Grupo 3 */}
                             <div className="optionItem">
                                 <FormRadioGroup_2
-                                    label="Geral / Reservado"
-                                    name="verniz_capa_geral_reservado"
-                                    value={formData.verniz_capa_geral_reservado}
-                                    onChange={handleChange}
-                                    options={['Geral', 'Reservado']}
-                                    spacing={20}
-                                />
-                            </div>
-                            {/* Grupo 4 */}
-                            <div className="optionItem">
-                                <FormRadioGroup_2
                                     label="Frente / Verso"
                                     name="verniz_capa_f_v"
                                     value={formData.verniz_capa_f_v}
                                     onChange={handleChange}
                                     options={['Frente', 'Verso']}
+                                    spacing={20}
+                                />
+                            </div>
+
+                            {/* Grupo 4 */}
+                            <div className="optionItem">
+                                <FormRadioGroup_2
+                                    label="Geral / Reservado"
+                                    name="verniz_capa_geral_reservado"
+                                    value={formData.verniz_capa_geral_reservado}
+                                    onChange={handleChange}
+                                    options={['Geral', 'Reservado']}
                                     spacing={20}
                                 />
                             </div>

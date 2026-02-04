@@ -195,6 +195,7 @@ export default function VisualizarOS() {
                         <div style={{ gridColumn: '1 / -1', border: '1px solid #d1d5db', borderRadius: '6px', padding: '1.2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '2rem', backgroundColor: '#fff' }}>
                             <RadioDisplay label="Verniz" value={formData.verniz_miolo} options={['Sim', 'Não']} />
                             <RadioDisplay label="Brilho / Mate" value={formData.verniz_miolo_brilho_mate} options={['Brilho', 'Mate']} />
+                            <RadioDisplay label="Frente / Verso" value={formData.verniz_miolo_f_v} options={['Frente', 'Verso']} />
                             <RadioDisplay label="Geral / Reservado" value={formData.verniz_miolo_geral_reservado} options={['Geral', 'Reservado']} />
                         </div>
                         <ViewField label="Observações Miolo" value={formData.observacoes_miolo} isTextArea fullWidth />
@@ -219,8 +220,8 @@ export default function VisualizarOS() {
                         <div style={{ gridColumn: '1 / -1', border: '1px solid #d1d5db', borderRadius: '6px', padding: '1.2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '2rem', backgroundColor: '#fff' }}>
                             <RadioDisplay label="Verniz" value={formData.verniz_capa} options={['Sim', 'Não']} />
                             <RadioDisplay label="Brilho / Mate" value={formData.verniz_capa_brilho_mate} options={['Brilho', 'Mate']} />
-                            <RadioDisplay label="Geral / Reservado" value={formData.verniz_capa_geral_reservado} options={['Geral', 'Reservado']} />
                             <RadioDisplay label="Frente / Verso" value={formData.verniz_capa_f_v} options={['Frente', 'Verso']} />
+                            <RadioDisplay label="Geral / Reservado" value={formData.verniz_capa_geral_reservado} options={['Geral', 'Reservado']} />
                         </div>
                         <ViewField label="Observações Capa" value={formData.observacoes_capa} isTextArea fullWidth />
                     </Section>

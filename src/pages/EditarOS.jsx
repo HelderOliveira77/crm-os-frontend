@@ -276,8 +276,6 @@ export default function EditarOS() {
                                 />
                             </div>
                         </div>
-
-
                     </SubGrid>
                     <FormInput label="Observações Gerais" name="observacoes_gerais" value={formData.observacoes_gerais} onChange={handleChange} isTextArea fullWidth />
                 </Section>
@@ -342,6 +340,7 @@ export default function EditarOS() {
                         <div style={{ border: '1px solid #d1d5db', borderRadius: '6px', padding: '1rem', backgroundColor: '#fff', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '5rem', gridColumn: '1/-1' }}>
                             <FormRadioGroup_2 label="Verniz" name="verniz_miolo" value={formData.verniz_miolo} onChange={handleChange} options={['Sim', 'Não']} />
                             <FormRadioGroup_2 label="Brilho / Mate" name="verniz_miolo_brilho_mate" value={formData.verniz_miolo_brilho_mate} onChange={handleChange} options={['Brilho', 'Mate']} />
+                            <FormRadioGroup_2 label="Frente / Verso" name="verniz_miolo_f_v" value={formData.verniz_miolo_f_v} onChange={handleChange} options={['Frente', 'Verso']} />
                             <FormRadioGroup_2 label="Geral / Reservado" name="verniz_miolo_geral_reservado" value={formData.verniz_miolo_geral_reservado} onChange={handleChange} options={['Geral', 'Reservado']} />
                         </div>
                     </SubGrid_2>
@@ -407,8 +406,8 @@ export default function EditarOS() {
                         <div style={{ border: '1px solid #d1d5db', borderRadius: '6px', padding: '1rem', backgroundColor: '#fff', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '5rem', gridColumn: '1/-1' }}>
                             <FormRadioGroup_2 label="Verniz" name="verniz_capa" value={formData.verniz_capa} onChange={handleChange} options={['Sim', 'Não']} />
                             <FormRadioGroup_2 label="Brilho / Mate" name="verniz_capa_brilho_mate" value={formData.verniz_capa_brilho_mate} onChange={handleChange} options={['Brilho', 'Mate']} />
-                            <FormRadioGroup_2 label="Geral / Reservado" name="verniz_capa_geral_reservado" value={formData.verniz_capa_geral_reservado} onChange={handleChange} options={['Geral', 'Reservado']} />
                             <FormRadioGroup_2 label="Frente / Verso" name="verniz_capa_f_v" value={formData.verniz_capa_f_v} onChange={handleChange} options={['Frente', 'Verso']} />
+                            <FormRadioGroup_2 label="Geral / Reservado" name="verniz_capa_geral_reservado" value={formData.verniz_capa_geral_reservado} onChange={handleChange} options={['Geral', 'Reservado']} />
                         </div>
                     </SubGrid_2>
                     <FormInput label="Observações Capa" name="observacoes_capa" value={formData.observacoes_capa} onChange={handleChange} isTextArea fullWidth />
