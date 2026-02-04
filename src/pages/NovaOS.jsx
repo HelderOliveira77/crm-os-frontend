@@ -32,6 +32,7 @@ const PAPEL_OPTIONS = ['AUTOCOLANTES', 'CARTE LUMINA', 'COUCHE MATE', 'COUCHE BR
     'UNO FINESS GLOSS', 'UNO PRIME GLOSS', 'UNO BRIGHT SATIN', 'UNO PRIME SATIN', 'UNO WEB WHITE GLOSS', 'UNO WEB WHITE BULKY', 'UPM ULTRA GLOSS', 'UPM COTE ', 'UPM EXO 72 C',
     'UPM ULTRA H', 'UPM ULTRA SILK', 'UPM SMART', 'UPM BRIGHT 68 C', 'R4 GLOSS', 'R4 CHORUS GLOSS',
     'RESPECTA GLOSS', 'RIVES DESIGN', 'TUFFCOTE'];
+const VERNIZ_OPTIONS = ['VERNIZ UV', 'VERNIZ OFFSET', 'PLÁSTICO'];
 
 
 const INITIAL_OS_NUMBER = 1000;
@@ -551,6 +552,7 @@ const FormRadioGroup_2 = ({ label, name, value, onChange, options, required = fa
             flexDirection: 'column',
             justifyContent: 'flex-start',
             padding: '0 0px', // Pequeno padding interno para o conteúdo
+            // flexWrap: 'wrap'
         }}>
 
             {/* RÓTULO: Altura MINIMA, mas sem minHeight fixo */}
@@ -650,7 +652,7 @@ export default function NovaOS() {
         verniz_miolo_f_v: '',
         verniz_miolo_geral_reservado: '',
         tipo_acabamento_miolo: '',
-        observacoes_miolo: '',
+        observacoes_verniz_miolo: '',
         cores_capa_frente: '0',
         cores_capa_verso: '0',
         cores_especial_capa_frente: '0',
@@ -786,6 +788,11 @@ export default function NovaOS() {
                 dataToSend[campo] = Number(dataToSend[campo]);
             }
         });
+
+        // NOVO: Tratamento para a data de receção
+        if (!dataToSend.data_recep || dataToSend.data_recep === '') {
+            dataToSend.data_recep = null;
+        }
 
         try {
             const response = await fetch(API_URL, {
@@ -1128,55 +1135,58 @@ export default function NovaOS() {
                     <SubGrid_2 title="Opções de Verniz">
                         {/* <-- Caixa que envolve os grupos --> */}
                         <div style={{
-                            border: '1px solid #d1d5db',
-                            borderRadius: '6px',
-                            padding: '1rem',                // 16 px → 1rem, mantém consistência
-                            backgroundColor: '#fff',
-                            //boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-                            marginBottom: '1.0rem',        // espaçamento inferior da caixa
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                            gap: '5rem',
-                            //marginRight: 'auto',   // empurra o bloco para a esquerda
-                            marginLeft: 0,         // garante que não haja margem à esquerda
+                         border: '1px solid #d1d5db',
+                         borderRadius: '6px',
+                         padding: '1.2rem',
+                         backgroundColor: '#fff',
+                         display: 'grid',
+                         /* Col 1: 150px (Verniz)
+                            Col 2: 40px (Espaço de afastamento)
+                            Restantes: Dividem o espaço, permitindo encolher (minmax 0)
+                         */
+                         gridTemplateColumns: '150px 40px repeat(3, minmax(0, 1fr))', 
+                         rowGap: '1rem',
+                         alignItems: 'start',
+                         width: '100%',
+                         boxSizing: 'border-box',
+                         overflow: 'hidden' // Segurança contra transbordos inesperados
                         }}  >
                             {/* Grupo 1 */}
-                            <div className="optionItem">
-                                <FormRadioGroup_2
+                            <div style={{ minWidth: '0' }}>
+                                <CustomSelect
                                     label="Verniz"
                                     name="verniz_miolo"
                                     value={formData.verniz_miolo}
                                     onChange={handleChange}
-                                    options={['Sim', 'Não']}
-                                    spacing={20}
+                                    options={VERNIZ_OPTIONS}
+                                    placeholder="Selecione o verniz..."
+                                    canCreate={true}
                                 />
                             </div>
-
+                            {/* ESPAÇADOR */}
+                            <div style={{ width: '40px' }} />
                             {/* Grupo 2 */}
-                            <div className="optionItem">
+                            <div className="optionItem" style={{ minWidth: '0' }}>
                                 <FormRadioGroup_2
                                     label="Brilho / Mate"
                                     name="verniz_miolo_brilho_mate"
                                     value={formData.verniz_miolo_brilho_mate}
                                     onChange={handleChange}
                                     options={['Brilho', 'Mate']}
-                                    spacing={20}
-                                />
+                                    spacing={20} />
                             </div>
                             {/* Grupo 3 */}
-                            <div className="optionItem">
+                            <div className="optionItem" style={{ minWidth: '0' }}>
                                 <FormRadioGroup_2
                                     label="Frente / Verso"
                                     name="verniz_miolo_f_v"
                                     value={formData.verniz_miolo_f_v}
                                     onChange={handleChange}
                                     options={['Frente', 'Verso']}
-                                    spacing={20}
-                                />
+                                    spacing={20} />
                             </div>
-
                             {/* Grupo 4 */}
-                            <div className="optionItem">
+                            <div className="optionItem" style={{ minWidth: '0' }}>
                                 <FormRadioGroup_2
                                     label="Geral / Reservado"
                                     name="verniz_miolo_geral_reservado"
@@ -1186,9 +1196,12 @@ export default function NovaOS() {
                                     spacing={20}
                                 />
                             </div>
+                            <div style={{ gridColumn: '1 / -1', width: '100%', marginTop: '0.5rem' }}>
+                                <FormInput label="Observações" name="observacoes_verniz_miolo" value={formData.observacoes_verniz_miolo} onChange={handleChange} isTextArea fullWidth type="text" />
+                            </div>
                         </div>
                     </SubGrid_2>
-                    <FormInput label="Observações Miolo" name="observacoes_miolo" value={formData.observacoes_miolo} onChange={handleChange} isTextArea fullWidth type="text" />
+                    {/* <FormInput label="Observações Miolo" name="observacoes_miolo" value={formData.observacoes_miolo} onChange={handleChange} isTextArea fullWidth type="text" /> */}
                 </Section>
                 {/* 4. CARACTERÍSTICAS CAPA */}
                 <Section title="CARACTERÍSTICAS CAPA" layoutType="two-fixed">

@@ -192,15 +192,15 @@ export default function VisualizarOS() {
                             <ViewField label="Gramagem (g)" value={formData.miolo_gramas} />
                             <ViewField label="Bobine (cm)" value={formData.bobine_miolo} />
                         </SubGrid>
-                        <div style={{ gridColumn: '1 / -1', border: '1px solid #d1d5db', borderRadius: '6px', padding: '1.2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '2rem', backgroundColor: '#fff' }}>
-                            <RadioDisplay label="Verniz" value={formData.verniz_miolo} options={['Sim', 'Não']} />
+                        <div style={{ gridColumn: '1 / -1', border: '1px solid #d1d5db', borderRadius: '6px', padding: '1.2rem', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem', backgroundColor: '#fff' }}>
+                            <ViewField label="Verniz" value={formData.verniz_miolo} />
                             <RadioDisplay label="Brilho / Mate" value={formData.verniz_miolo_brilho_mate} options={['Brilho', 'Mate']} />
                             <RadioDisplay label="Frente / Verso" value={formData.verniz_miolo_f_v} options={['Frente', 'Verso']} />
                             <RadioDisplay label="Geral / Reservado" value={formData.verniz_miolo_geral_reservado} options={['Geral', 'Reservado']} />
+                            <ViewField label="Observações Verniz" value={formData.observacoes_verniz_miolo} isTextArea fullWidth />
                         </div>
-                        <ViewField label="Observações Miolo" value={formData.observacoes_miolo} isTextArea fullWidth />
+                        
                     </Section>
-
                     {/* 4. CARACTERÍSTICAS CAPA */}
                     <Section title="CARACTERÍSTICAS CAPA">
                         <SubGrid>
@@ -275,7 +275,9 @@ export default function VisualizarOS() {
                 }}>
                     {formData.desc_trab}
                 </span>
-                <span className="data-field" style={{ top: '53mm', left: '80mm' }}>{formData.lineatura}</span>
+                <span className="data-field" style={{ top: '53mm', left: '80mm' }}>{formData.lineatura_capa}</span>
+                <span className="data-field" style={{ top: '53mm', left: '80mm' }}>{formData.lineatura_miolo}</span>
+              
                 <span className="data-field" style={{ top: '65mm', left: '32mm' }}>
                     {/* Cores Capa na Guia */}
                     {`${formData.cores_capa_frente || 0} / ${formData.cores_capa_verso || 0}`}

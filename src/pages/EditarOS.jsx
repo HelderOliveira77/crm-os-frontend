@@ -15,6 +15,8 @@ const MAQUINA_MAPPING = {
 };
 const ACABAMENTO_OPTIONS = ['AGRAFADO', 'APARADO', 'COLADO LOMBADA', 'CORTES RETOS', 'COSIDO', 'SEM ACABAMENTO', 'SERROTADO'];
 const PAPEL_OPTIONS = ['AUTOCOLANTES', 'CARTE LUMINA', 'COUCHE MATE', 'COUCHE BRILHO', 'COUCHE SILK', 'CREATOR STAR', 'CARTOLINA FOLDING', 'CARTOLINA (Verso cinza)', 'ENVIPRESS', 'EAGLE CREAM', 'HOLMEN VIEW', 'IOR', 'LWC', 'NEWSPRESS', 'NEWSPRINT', 'OFFSET', 'OPALE TELADO', 'PAPEL RECICLADO', 'UNO FINESS GLOSS', 'UNO PRIME GLOSS', 'UNO BRIGHT SATIN', 'UNO PRIME SATIN', 'UNO WEB WHITE GLOSS', 'UNO WEB WHITE BULKY', 'UPM ULTRA GLOSS', 'UPM COTE ', 'UPM EXO 72 C', 'UPM ULTRA H', 'UPM ULTRA SILK', 'UPM SMART', 'UPM BRIGHT 68 C', 'R4 GLOSS', 'R4 CHORUS GLOSS', 'RESPECTA GLOSS', 'RIVES DESIGN', 'TUFFCOTE'];
+const VERNIZ_OPTIONS = ['VERNIZ UV', 'VERNIZ OFFSET', 'PLÁSTICO'];
+
 
 // --- ESTILOS (IGUAIS AO NovaOS.jsx) ---
 const styles = {
@@ -124,8 +126,13 @@ export default function EditarOS() {
     const [loading, setLoading] = useState(false);
 
     // Listas de campos para validação (IGUAL NovaOS)
-    const camposEstritamenteNumericos = ['num_orc', 'num_pag', 'tiragem', 'cores_miolo_frente', 'cores_miolo_verso', 'cores_especiais_miolo_frente', 'cores_especiais_miolo_verso', 'miolo_gramas', 'cores_capa_frente', 'cores_capa_verso', 'cores_especiais_capa_frente', 'cores_especiais_capa_verso', 'capa_gramas', 'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas'];
+    const camposEstritamenteNumericos = [
+        'num_orc', 'num_pag', 'tiragem', 'cores_miolo_frente', 'cores_miolo_verso', 'cores_especiais_miolo_frente', 'cores_especiais_miolo_verso', 'miolo_gramas',
+        'cores_capa_frente', 'cores_capa_verso', 'cores_especiais_capa_frente', 'cores_especiais_capa_verso', 'capa_gramas',
+        'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas'
+    ];
     const camposDecimais = ['lombada', 'tempo_operador'];
+    const camposLineatura = ['lineatura_capa', 'lineatura_miolo']; // Nova lista
 
 
     if (user?.role === 'Viewer') {
@@ -152,6 +159,11 @@ export default function EditarOS() {
                 });
                 if (response.ok) {
                     const data = await response.json();
+                    // HIGIENIZAÇÃO DE ENTRADA: Converte nulls em strings vazias
+                    const sanitizedData = { ...data };
+                    Object.keys(sanitizedData).forEach(key => {
+                        if (sanitizedData[key] === null) sanitizedData[key] = '';
+                    });
                     setFormData(data);
                 }
             } catch (err) { console.error(err); }
@@ -170,15 +182,39 @@ export default function EditarOS() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+        // Criamos uma cópia para não mexer no estado da UI
+        const dataToSend = { ...formData };
+
+        // Percorremos os campos numéricos e convertemos "" em null
+        camposEstritamenteNumericos.forEach(campo => {
+            if (dataToSend[campo] === '') {
+                dataToSend[campo] = null;
+            }
+        });
+
         try {
             const response = await fetch(`http://localhost:3000/api/os/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(dataToSend), // Enviamos o objeto tratado
             });
-            if (response.ok) { alert('OS Atualizada!'); navigate('/dashboard'); }
-        } catch (err) { alert('Erro na submissão'); }
-        finally { setLoading(false); }
+
+            if (response.ok) {
+                alert('OS Atualizada!');
+                navigate('/dashboard');
+            } else {
+                const errorData = await response.json();
+                alert(`Erro ao guardar: ${errorData.message || 'Verifique os dados'}`);
+            }
+        } catch (err) {
+            alert('Erro na submissão');
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (!formData) return <div style={{ padding: '50px', textAlign: 'center' }}>A carregar dados da Ordem de Serviço...</div>;
@@ -281,55 +317,55 @@ export default function EditarOS() {
                 </Section>
 
                 <Section title="CARACTERÍSTICAS MIOLO (definição papel)">
-                <SubGrid>
-                    <CustomSelect label="Acabamento" name="tipo_acabamento_miolo" value={formData.tipo_acabamento_miolo} onChange={handleChange} options={ACABAMENTO_OPTIONS} />
-                    {/* CORES MIOLO EDITÁVEL */}
-                    <div style={{ marginBottom: '10px' }}>
-                        <label style={styles.label}>Cores</label>
-                        <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
-                            <input
-                                name="cores_miolo_frente"
-                                value={formData.cores_miolo_frente || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                type="number"
-                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
-                            />
-                            <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
-                            <input
-                                name="cores_miolo_verso"
-                                value={formData.cores_miolo_verso || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                type="number"
-                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
-                            />
+                    <SubGrid>
+                        <CustomSelect label="Acabamento" name="tipo_acabamento_miolo" value={formData.tipo_acabamento_miolo} onChange={handleChange} options={ACABAMENTO_OPTIONS} />
+                        {/* CORES MIOLO EDITÁVEL */}
+                        <div style={{ marginBottom: '10px' }}>
+                            <label style={styles.label}>Cores</label>
+                            <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
+                                <input
+                                    name="cores_miolo_frente"
+                                    value={formData.cores_miolo_frente || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    type="number"
+                                    style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                                />
+                                <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
+                                <input
+                                    name="cores_miolo_verso"
+                                    value={formData.cores_miolo_verso || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    type="number"
+                                    style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                                />
+                            </div>
                         </div>
-                    </div>
 
-                    {/* CORES ESPECIAIS MIOLO EDITÁVEL */}
-                    <div style={{ marginBottom: '10px' }}>
-                        <label style={styles.label}>Cores Especiais</label>
-                        <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
-                            <input
-                                name="cores_especiais_miolo_frente"
-                                value={formData.cores_especiais_miolo_frente || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                type="number"
-                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
-                            />
-                            <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
-                            <input
-                                name="cores_especiais_miolo_verso"
-                                value={formData.cores_especiais_miolo_verso || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                type="number"
-                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
-                            />
+                        {/* CORES ESPECIAIS MIOLO EDITÁVEL */}
+                        <div style={{ marginBottom: '10px' }}>
+                            <label style={styles.label}>Cores Especiais</label>
+                            <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
+                                <input
+                                    name="cores_especiais_miolo_frente"
+                                    value={formData.cores_especiais_miolo_frente || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    type="number"
+                                    style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                                />
+                                <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
+                                <input
+                                    name="cores_especiais_miolo_verso"
+                                    value={formData.cores_especiais_miolo_verso || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    type="number"
+                                    style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                                />
+                            </div>
                         </div>
-                    </div>
                     </SubGrid>
                     <SubGrid>
                         <CustomSelect label="Papel" name="papel_miolo" value={formData.papel_miolo} onChange={handleChange} options={PAPEL_OPTIONS} />
@@ -338,7 +374,7 @@ export default function EditarOS() {
                     </SubGrid>
                     <SubGrid_2 title="Opções de Verniz">
                         <div style={{ border: '1px solid #d1d5db', borderRadius: '6px', padding: '1rem', backgroundColor: '#fff', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '5rem', gridColumn: '1/-1' }}>
-                            <FormRadioGroup_2 label="Verniz" name="verniz_miolo" value={formData.verniz_miolo} onChange={handleChange} options={['Sim', 'Não']} />
+                             <CustomSelect label="Verniz" name="verniz_miolo" value={formData.verniz_miolo} onChange={handleChange} options={VERNIZ_OPTIONS} />
                             <FormRadioGroup_2 label="Brilho / Mate" name="verniz_miolo_brilho_mate" value={formData.verniz_miolo_brilho_mate} onChange={handleChange} options={['Brilho', 'Mate']} />
                             <FormRadioGroup_2 label="Frente / Verso" name="verniz_miolo_f_v" value={formData.verniz_miolo_f_v} onChange={handleChange} options={['Frente', 'Verso']} />
                             <FormRadioGroup_2 label="Geral / Reservado" name="verniz_miolo_geral_reservado" value={formData.verniz_miolo_geral_reservado} onChange={handleChange} options={['Geral', 'Reservado']} />
@@ -348,54 +384,54 @@ export default function EditarOS() {
                 </Section>
 
                 <Section title="CARACTERÍSTICAS CAPA">
-                <SubGrid>
-                    <FormInput label="Lombada (mm)" name="lombada" value={formData.lombada} onChange={handleChange} />
-                    {/* CORES CAPA EDITÁVEL */}
-                    <div style={{ marginBottom: '10px' }}>
-                        <label style={styles.label}>Cores</label>
-                        <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
-                            <input
-                                name="cores_capa_frente"
-                                value={formData.cores_capa_frente || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                type="number"
-                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
-                            />
-                            <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
-                            <input
-                                name="cores_capa_verso"
-                                value={formData.cores_capa_verso || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                type="number"
-                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
-                            />
+                    <SubGrid>
+                        <FormInput label="Lombada (mm)" name="lombada" value={formData.lombada} onChange={handleChange} />
+                        {/* CORES CAPA EDITÁVEL */}
+                        <div style={{ marginBottom: '10px' }}>
+                            <label style={styles.label}>Cores</label>
+                            <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
+                                <input
+                                    name="cores_capa_frente"
+                                    value={formData.cores_capa_frente || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    type="number"
+                                    style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                                />
+                                <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
+                                <input
+                                    name="cores_capa_verso"
+                                    value={formData.cores_capa_verso || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    type="number"
+                                    style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    {/* CORES ESPECIAIS CAPA EDITÁVEL */}
-                    <div style={{ marginBottom: '10px' }}>
-                        <label style={styles.label}>Cores</label>
-                        <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
-                            <input
-                                name="cores_especiais_capa_frente"
-                                value={formData.cores_especiais_capa_frente || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                type="number"
-                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
-                            />
-                            <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
-                            <input
-                                name="cores_especiais_capa_verso"
-                                value={formData.cores_especiais_capa_verso || ''}
-                                onChange={handleChange}
-                                placeholder="0"
-                                type="number"
-                                style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
-                            />
+                        {/* CORES ESPECIAIS CAPA EDITÁVEL */}
+                        <div style={{ marginBottom: '10px' }}>
+                            <label style={styles.label}>Cores</label>
+                            <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
+                                <input
+                                    name="cores_especiais_capa_frente"
+                                    value={formData.cores_especiais_capa_frente || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    type="number"
+                                    style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'right', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                                />
+                                <span style={{ fontWeight: 'bold', color: 'black', padding: '0 10px' }}>/</span>
+                                <input
+                                    name="cores_especiais_capa_verso"
+                                    value={formData.cores_especiais_capa_verso || ''}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    type="number"
+                                    style={{ width: '40px', border: 'none', outline: 'none', textAlign: 'left', background: 'transparent', padding: '12px 0', fontSize: '1em' }}
+                                />
+                            </div>
                         </div>
-                    </div>
                     </SubGrid>
                     <SubGrid layoutType="three">
                         <CustomSelect label="Papel" name="papel_capa" value={formData.papel_capa} onChange={handleChange} options={PAPEL_OPTIONS} />
