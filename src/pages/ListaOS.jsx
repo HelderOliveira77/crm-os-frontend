@@ -24,7 +24,7 @@ function ListaOS() {
     const userName = user?.username || 'Utilizador';   
 
     // ESTADOS:
-    const [orders, setOrders] = useState([]); // Array para guardar as OS
+    const [orders, setOrders] = useState([]); // Array para guardar as OS   
     const [loading, setLoading] = useState(true); // Loading da lista de OS
     const [error, setError] = useState(null);
 
