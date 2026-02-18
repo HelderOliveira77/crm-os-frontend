@@ -90,6 +90,10 @@ const styles = {
         borderRadius: '4px',
         transition: 'border-color 0.3s, box-shadow 0.3s',
         backgroundColor: '#fff',
+        fontWeight: '400',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1) inset',
+        color: '#2c3e50',
+        fontSize: '0.9em', 
     },
     readOnlyInput: {
         width: '100%',
@@ -170,10 +174,10 @@ const styles = {
         borderRadius: '4px',
         transition: 'border-color 0.3s, box-shadow 0.3s',
         backgroundColor: '#fff',
-        fontWeight: '600',
+        fontWeight: '400',
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1) inset',
         color: '#2c3e50',
-        fontSize: '1em', // Garante tamanho de fonte consistente
+        fontSize: '0.9em', 
     },
     actionsContainer: {
         display: 'flex',
@@ -741,7 +745,7 @@ export default function NovaOS() {
 
     // 1. DEFINIÇÃO DAS LISTAS DE CAMPOS (Dentro do componente)
     const camposEstritamenteNumericos = [
-        'num_orc', 'num_pag', 'tiragem', 'cores_miolo_frente', 'cores_miolo_verso', 'cores_especiais_miolo_frente', 'cores_especiais_miolo_verso', 'miolo_gramas',
+        'num_orc', 'tiragem', 'cores_miolo_frente', 'cores_miolo_verso', 'cores_especiais_miolo_frente', 'cores_especiais_miolo_verso', 'miolo_gramas',
         'cores_capa_frente', 'cores_capa_verso', 'cores_especiais_capa_frente', 'cores_especiais_capa_verso', 'capa_gramas',
         'provas_cor', 'ozalide_digital', 'provas_konica', 'quantidade_chapas'
     ];
@@ -918,7 +922,7 @@ export default function NovaOS() {
                             required={false}
                             canCreate={true}
                             type="text" />
-                        <FormInput label="Nº Páginas" name="num_pag" value={formData.num_pag} onChange={handleChange} type="numeric" />
+                        <FormInput label="Nº Páginas (Miolo + Capa)" name="num_pag" value={formData.num_pag} onChange={handleChange} type="numeric" />
                         <FormInput label="Tiragem" name="tiragem" value={formData.tiragem} onChange={handleChange} type="numeric" />
                     </SubGrid>
                     <SubGrid layoutType="three">
@@ -1132,7 +1136,7 @@ export default function NovaOS() {
                         <FormInput label="Bobine (cm)" name="bobine_miolo" value={formData.bobine_miolo} onChange={handleChange} type="numeric" />
                     </SubGrid>
 
-                    <SubGrid_2 title="Opções de Verniz">
+                    <SubGrid_2 title="Opções de Verniz" >
                         {/* <-- Caixa que envolve os grupos --> */}
                         <div style={{
                          border: '1px solid #d1d5db',
@@ -1144,7 +1148,7 @@ export default function NovaOS() {
                             Col 2: 40px (Espaço de afastamento)
                             Restantes: Dividem o espaço, permitindo encolher (minmax 0)
                          */
-                         gridTemplateColumns: '150px 40px repeat(3, minmax(0, 1fr))', 
+                         gridTemplateColumns: '200px 160px repeat(3, minmax(0, 1fr))', 
                          rowGap: '1rem',
                          alignItems: 'start',
                          width: '100%',
@@ -1152,7 +1156,7 @@ export default function NovaOS() {
                          overflow: 'hidden' // Segurança contra transbordos inesperados
                         }}  >
                             {/* Grupo 1 */}
-                            <div style={{ minWidth: '0' }}>
+                            <div style={{ minWidth: '20' }}>
                                 <CustomSelect
                                     label="Verniz"
                                     name="verniz_miolo"
@@ -1160,11 +1164,11 @@ export default function NovaOS() {
                                     onChange={handleChange}
                                     options={VERNIZ_OPTIONS}
                                     placeholder="Selecione o verniz..."
-                                    canCreate={true}
+                                    canCreate={true}                                    
                                 />
                             </div>
                             {/* ESPAÇADOR */}
-                            <div style={{ width: '40px' }} />
+                            <div style={{ width: '200px' }} />
                             {/* Grupo 2 */}
                             <div className="optionItem" style={{ minWidth: '0' }}>
                                 <FormRadioGroup_2

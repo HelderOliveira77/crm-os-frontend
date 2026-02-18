@@ -57,27 +57,66 @@ const CustomSelect = ({ label, name, value, onChange, options, placeholder, canC
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState(value || '');
     const wrapperRef = useRef(null);
+
+    // Sincroniza o termo de busca quando o valor externo muda
     useEffect(() => setSearchTerm(value || ''), [value]);
+
+    // Fecha o menu ao clicar fora
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     const handleSelect = (option) => {
         onChange({ target: { name, value: option } });
         setSearchTerm(option);
         setIsOpen(false);
     };
+
+    const handleInputChange = (e) => {
+        const val = e.target.value;
+        setSearchTerm(val);
+        // Se puder criar ou se estiver vazio (para permitir limpar), comunica ao pai
+        if (canCreate || val === '') {
+            onChange({ target: { name, value: val } });
+        }
+    };
+
     return (
         <div style={{ marginBottom: '10px', position: 'relative' }} ref={wrapperRef}>
             <label style={styles.label}>{label}</label>
-            <input
-                type="text"
-                value={isDisabled ? '' : searchTerm}
-                onChange={(e) => { setSearchTerm(e.target.value); if (canCreate) onChange(e); }}
-                onClick={() => !isDisabled && setIsOpen(!isOpen)}
-                style={styles.datalistInput}
-                placeholder={isDisabled ? 'Selecione primeiro...' : placeholder}
-                readOnly={!canCreate}
-                disabled={isDisabled}
-            />
+            <div style={{ position: 'relative' }}>
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleInputChange}
+                    onClick={() => !isDisabled && setIsOpen(!isOpen)}
+                    style={styles.datalistInput}
+                    placeholder={isDisabled ? 'Selecione primeiro...' : placeholder}
+                    readOnly={!canCreate && !isDisabled}
+                    disabled={isDisabled}
+                />
+                {/* Botão X para limpar rapidamente (Opcional, mas muito útil) */}
+                {searchTerm && !isDisabled && (
+                    <span 
+                        onClick={() => handleSelect('')}
+                        style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#999', fontWeight: 'bold' }}
+                    >
+                        ✕
+                    </span>
+                )}
+            </div>
             {isOpen && !isDisabled && (
                 <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 100, border: '1px solid #ccc', backgroundColor: '#fff', maxHeight: '200px', overflowY: 'auto', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+                    {/* Opção para limpar campo vazio no topo da lista */}
+                    <div onClick={() => handleSelect('')} style={{ padding: '10px', cursor: 'pointer', color: '#e74c3c', borderBottom: '1px solid #eee' }}>
+                        {/* -- Limpar Campo -- */}
+                    </div>
                     {options.filter(o => o.toLowerCase().includes(searchTerm.toLowerCase())).map(o => (
                         <div key={o} onClick={() => handleSelect(o)} style={{ padding: '10px', cursor: 'pointer' }}>{o}</div>
                     ))}
@@ -181,15 +220,20 @@ export default function EditarOS() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+      
+        if (!formData.estado) {
+            alert("O campo ESTADO é obrigatório!");
+            return; 
+        }
         setLoading(true);
 
         // Criamos uma cópia para não mexer no estado da UI
         const dataToSend = { ...formData };
 
         // Percorremos os campos numéricos e convertemos "" em null
-        camposEstritamenteNumericos.forEach(campo => {
-            if (dataToSend[campo] === '') {
-                dataToSend[campo] = null;
+        Object.keys(dataToSend).forEach(key => {
+            if (dataToSend[key] === '') {
+                dataToSend[key] = null;
             }
         });
 
@@ -275,7 +319,7 @@ export default function EditarOS() {
                     <SubGrid>
                         <FormInput label="Data de Abertura" name="data_aber" value={formData.data_aber ? formData.data_aber.slice(0, 10) : ''} readOnly />
                         <FormInput label="Data de Receção" name="data_recep" value={formData.data_recep ? formData.data_recep.slice(0, 10) : ''} onChange={handleChange} type="date" />
-                        <CustomSelect label="Estado" name="estado" value={formData.estado} onChange={handleChange} options={ESTADO_OPTIONS} required />
+                        <CustomSelect label="Estado" name="estado" value={formData.estado} onChange={handleChange} options={ESTADO_OPTIONS} required  />
                     </SubGrid>
                 </Section>
 
@@ -411,7 +455,7 @@ export default function EditarOS() {
                         </div>
                         {/* CORES ESPECIAIS CAPA EDITÁVEL */}
                         <div style={{ marginBottom: '10px' }}>
-                            <label style={styles.label}>Cores</label>
+                            <label style={styles.label}>Cores Especiais</label>
                             <div style={{ ...styles.input, display: 'inline-flex', alignItems: 'center', padding: '0 5px', width: 'auto', minWidth: '120px' }}>
                                 <input
                                     name="cores_especiais_capa_frente"
