@@ -198,7 +198,7 @@ export default function VisualizarOS() {
                             <RadioDisplay label="Brilho / Mate" value={formData.verniz_miolo_brilho_mate} options={['Brilho', 'Mate']} />
                             <RadioDisplay label="Frente / Verso" value={formData.verniz_miolo_f_v} options={['Frente', 'Verso']} />
                             <RadioDisplay label="Geral / Reservado" value={formData.verniz_miolo_geral_reservado} options={['Geral', 'Reservado']} />
-                            <ViewField label="Observações Verniz" value={formData.observacoes_verniz_miolo} isTextArea fullWidth />
+                            <ViewField label="Observações Verniz (Miolo)" value={formData.observacoes_verniz_miolo} isTextArea fullWidth />
                         </div>
                         </SubGrid>
                     </Section>
@@ -218,13 +218,14 @@ export default function VisualizarOS() {
                             <ViewField label="Gramagem (g)" value={formData.capa_gramas} />
                             <ViewField label="Bobine (cm)" value={formData.bobine_capa} />
                         </SubGrid>
-                        <div style={{ gridColumn: '1 / -1', border: '1px solid #d1d5db', borderRadius: '6px', padding: '1.2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '2rem', backgroundColor: '#fff' }}>
-                            <RadioDisplay label="Verniz" value={formData.verniz_capa} options={['Sim', 'Não']} />
+                        <div style={{ gridColumn: '1 / -1', border: '1px solid #d1d5db', borderRadius: '6px', padding: '1.2rem', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',columnGap: '2rem', rowGap: '1.5rem', backgroundColor: '#fff', alignItems: 'start' }}>
+                        <ViewField label="Verniz" value={formData.verniz_capa} />
                             <RadioDisplay label="Brilho / Mate" value={formData.verniz_capa_brilho_mate} options={['Brilho', 'Mate']} />
                             <RadioDisplay label="Frente / Verso" value={formData.verniz_capa_f_v} options={['Frente', 'Verso']} />
                             <RadioDisplay label="Geral / Reservado" value={formData.verniz_capa_geral_reservado} options={['Geral', 'Reservado']} />
+                            <ViewField label="Observações Verniz (Capa)" value={formData.observacoes_verniz_capa} isTextArea fullWidth />
+
                         </div>
-                        <ViewField label="Observações Capa" value={formData.observacoes_capa} isTextArea fullWidth />
                     </Section>
 
                     {/* 5. INFORMAÇÃO PROVAS E CHAPAS */}

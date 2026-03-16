@@ -15,7 +15,7 @@ const MAQUINA_MAPPING = {
 };
 const ACABAMENTO_OPTIONS = ['AGRAFADO', 'APARADO', 'COLADO LOMBADA', 'CORTES RETOS', 'COSIDO', 'SEM ACABAMENTO', 'SERROTADO'];
 const PAPEL_OPTIONS = ['AUTOCOLANTES', 'CARTE LUMINA', 'COUCHE MATE', 'COUCHE BRILHO', 'COUCHE SILK', 'CREATOR STAR', 'CARTOLINA FOLDING', 'CARTOLINA (Verso cinza)', 'ENVIPRESS', 'EAGLE CREAM', 'HOLMEN VIEW', 'IOR', 'LWC', 'NEWSPRESS', 'NEWSPRINT', 'OFFSET', 'OPALE TELADO', 'PAPEL RECICLADO', 'UNO FINESS GLOSS', 'UNO PRIME GLOSS', 'UNO BRIGHT SATIN', 'UNO PRIME SATIN', 'UNO WEB WHITE GLOSS', 'UNO WEB WHITE BULKY', 'UPM ULTRA GLOSS', 'UPM COTE ', 'UPM EXO 72 C', 'UPM ULTRA H', 'UPM ULTRA SILK', 'UPM SMART', 'UPM BRIGHT 68 C', 'R4 GLOSS', 'R4 CHORUS GLOSS', 'RESPECTA GLOSS', 'RIVES DESIGN', 'TUFFCOTE'];
-const VERNIZ_OPTIONS = ['VERNIZ UV', 'VERNIZ OFFSET', 'PLÁSTICO'];
+const VERNIZ_OPTIONS = ['VERNIZ UV', 'VERNIZ OFFSET', 'VERNIZ ÁGUA', 'PLÁSTICO'];
 
 
 // --- ESTILOS (IGUAIS AO NovaOS.jsx) ---
@@ -416,15 +416,16 @@ export default function EditarOS() {
                         <FormInput label="Gramagem (g)" name="miolo_gramas" value={formData.miolo_gramas} onChange={handleChange} />
                         <FormInput label="Bobine (cm)" name="bobine_miolo" value={formData.bobine_miolo} onChange={handleChange} />
                     </SubGrid>
-                    <SubGrid_2 title="Opções de Verniz">
+                    <SubGrid_2 title="Opções de Verniz (Miolo)">
                         <div style={{ border: '1px solid #d1d5db', borderRadius: '6px', padding: '1.2rem', backgroundColor: '#fff', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', columnGap: '2rem', rowGap: '1.5rem',alignItems: 'start' }}>
                              <CustomSelect label="Verniz" name="verniz_miolo" value={formData.verniz_miolo} onChange={handleChange} options={VERNIZ_OPTIONS} />
                             <FormRadioGroup_2 label="Brilho / Mate" name="verniz_miolo_brilho_mate" value={formData.verniz_miolo_brilho_mate} onChange={handleChange} options={['Brilho', 'Mate']} />
                             <FormRadioGroup_2 label="Frente / Verso" name="verniz_miolo_f_v" value={formData.verniz_miolo_f_v} onChange={handleChange} options={['Frente', 'Verso']} />
                             <FormRadioGroup_2 label="Geral / Reservado" name="verniz_miolo_geral_reservado" value={formData.verniz_miolo_geral_reservado} onChange={handleChange} options={['Geral', 'Reservado']} />
+                            <FormInput label="Observações Verniz (Miolo)" name="observacoes_verniz_miolo" value={formData.observacoes_verniz_miolo} onChange={handleChange} isTextArea fullWidth />
                         </div>
                     </SubGrid_2>
-                    <FormInput label="Observações Miolo" name="observacoes_miolo" value={formData.observacoes_miolo} onChange={handleChange} isTextArea fullWidth />
+                   
                 </Section>
 
                 <Section title="CARACTERÍSTICAS CAPA">
@@ -482,15 +483,15 @@ export default function EditarOS() {
                         <FormInput label="Gramagem (g)" name="capa_gramas" value={formData.capa_gramas} onChange={handleChange} />
                         <FormInput label="Bobine (cm)" name="bobine_capa" value={formData.bobine_capa} onChange={handleChange} />
                     </SubGrid>
-                    <SubGrid_2 title="Opções de Verniz">
-                        <div style={{ border: '1px solid #d1d5db', borderRadius: '6px', padding: '1rem', backgroundColor: '#fff', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '5rem', gridColumn: '1/-1' }}>
-                            <FormRadioGroup_2 label="Verniz" name="verniz_capa" value={formData.verniz_capa} onChange={handleChange} options={['Sim', 'Não']} />
+                    <SubGrid_2 title="Opções de Verniz (Capa)">
+                    <div style={{ border: '1px solid #d1d5db', borderRadius: '6px', padding: '1.2rem', backgroundColor: '#fff', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', columnGap: '2rem', rowGap: '1.5rem',alignItems: 'start' }}>
+                         <CustomSelect label="Verniz" name="verniz_capa" value={formData.verniz_capa} onChange={handleChange} options={VERNIZ_OPTIONS} />
                             <FormRadioGroup_2 label="Brilho / Mate" name="verniz_capa_brilho_mate" value={formData.verniz_capa_brilho_mate} onChange={handleChange} options={['Brilho', 'Mate']} />
                             <FormRadioGroup_2 label="Frente / Verso" name="verniz_capa_f_v" value={formData.verniz_capa_f_v} onChange={handleChange} options={['Frente', 'Verso']} />
                             <FormRadioGroup_2 label="Geral / Reservado" name="verniz_capa_geral_reservado" value={formData.verniz_capa_geral_reservado} onChange={handleChange} options={['Geral', 'Reservado']} />
+                            <FormInput label="Observações Verniz (Capa)" name="observacoes_verniz_capa" value={formData.observacoes_verniz_capa} onChange={handleChange} isTextArea fullWidth />
                         </div>
                     </SubGrid_2>
-                    <FormInput label="Observações Capa" name="observacoes_capa" value={formData.observacoes_capa} onChange={handleChange} isTextArea fullWidth />
                 </Section>
 
                 <Section title="INFORMAÇÃO PROVAS E CHAPAS" layoutType="four">
