@@ -1148,8 +1148,9 @@ export default function NovaOS() {
                             Col 2: 40px (Espaço de afastamento)
                             Restantes: Dividem o espaço, permitindo encolher (minmax 0)
                          */
-                         gridTemplateColumns: '200px 160px repeat(3, minmax(0, 1fr))', 
-                         rowGap: '1rem',
+                         gridTemplateColumns: 'repeat(4, 1fr)', 
+                         columnGap: '2rem',
+                         rowGap: '1.5rem',
                          alignItems: 'start',
                          width: '100%',
                          boxSizing: 'border-box',
@@ -1168,7 +1169,7 @@ export default function NovaOS() {
                                 />
                             </div>
                             {/* ESPAÇADOR */}
-                            <div style={{ width: '200px' }} />
+                            {/* <div style={{ width: '50px' }} /> */}
                             {/* Grupo 2 */}
                             <div className="optionItem" style={{ minWidth: '0' }}>
                                 <FormRadioGroup_2

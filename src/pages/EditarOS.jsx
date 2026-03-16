@@ -417,7 +417,7 @@ export default function EditarOS() {
                         <FormInput label="Bobine (cm)" name="bobine_miolo" value={formData.bobine_miolo} onChange={handleChange} />
                     </SubGrid>
                     <SubGrid_2 title="Opções de Verniz">
-                        <div style={{ border: '1px solid #d1d5db', borderRadius: '6px', padding: '1rem', backgroundColor: '#fff', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '5rem', gridColumn: '1/-1' }}>
+                        <div style={{ border: '1px solid #d1d5db', borderRadius: '6px', padding: '1.2rem', backgroundColor: '#fff', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', columnGap: '2rem', rowGap: '1.5rem',alignItems: 'start' }}>
                              <CustomSelect label="Verniz" name="verniz_miolo" value={formData.verniz_miolo} onChange={handleChange} options={VERNIZ_OPTIONS} />
                             <FormRadioGroup_2 label="Brilho / Mate" name="verniz_miolo_brilho_mate" value={formData.verniz_miolo_brilho_mate} onChange={handleChange} options={['Brilho', 'Mate']} />
                             <FormRadioGroup_2 label="Frente / Verso" name="verniz_miolo_f_v" value={formData.verniz_miolo_f_v} onChange={handleChange} options={['Frente', 'Verso']} />
